@@ -10,6 +10,15 @@ task :secondTask do
 	test
 end
 
+task :thirdTask do
+	other
+end
+
 def test
 	sh "cat temp_testing.txt"
+end
+
+def other
+	data = File.read("temp_testing.txt")
+	puts data.delete("Number: ").to_i * 2
 end
