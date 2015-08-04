@@ -53,6 +53,10 @@ task :getConfig do
 	loadConfig
 end
 
+task :testConnection do
+	sh "ping www.google.com"
+end
+
 def loadConfig
 	if !File.file?("config.txt")
 		fname = "config.txt"
