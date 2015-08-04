@@ -1,2 +1,3 @@
 Number: 6
 Type: add
+Text: Testing text in box
