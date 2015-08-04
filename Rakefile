@@ -7,9 +7,9 @@ task :firstTask do
 end
 
 task :secondTask do
-	if File.exist?(file_name) do
-		file = File.open(file_name)
-		file.readline
-		file.close
-  	end
+	test
+end
+
+def test
+	sh "cat temp_testing.txt"
 end
