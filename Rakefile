@@ -2,8 +2,9 @@ file_name = "temp_testing.txt"
 basicNum = 0
 numberType = "nothing"
 text = "nothing"
+create = true
 
-task :default => :random
+task :default => :build
 
 task :firstTask do
 	puts "Testing"
@@ -45,7 +46,7 @@ def yep
 	end
 end
 
-task :build => :getConfig do
+task :build do
 	createfile
 end
 
@@ -59,6 +60,7 @@ end
 
 def loadConfig
 	if !File.file?("config.txt")
+		create = false
 		fname = "config.txt"
 		somefile = File.open(fname, "w")
 		somefile.puts "Number: "
@@ -69,38 +71,54 @@ def loadConfig
 end
 
 def createfile
-	data = IO.readlines("config.txt")
-	data[2].slice! "Text: "
-	num = data[2].length
-	puts data[2]
-	fname = "sample.txt"
-	somefile = File.open(fname, "w")
-	somefile.print "+---"
-	for i in 0...num
-		somefile.print "-"
+	allFiles = Dir.glob("*")
+	puts allFiles[4]
+	create = true
+	if !File.file?("config.txt")
+		create = false
+		fname = "config.txt"
+		somefile = File.open(fname, "w")
+		somefile.puts "Number: "
+		somefile.puts "Type: "
+		somefile.print "Text: "
+		somefile.close
+		puts "\nPlease fill out the config.txt file\n\n"
 	end
-	somefile.puts "---+"
-	somefile.print "|   "
-	for i in 0...num
-		somefile.print " "
+	puts "blem: #{create}"
+	if create
+		data = IO.readlines("config.txt")
+		data[2].slice! "Text: "
+		num = data[2].length
+		puts data[2]
+		fname = "sample.txt"
+		somefile = File.open(fname, "w")
+		somefile.print "+---"
+		for i in 0...num
+			somefile.print "-"
+		end
+		somefile.puts "---+"
+		somefile.print "|   "
+		for i in 0...num
+			somefile.print " "
+		end
+		somefile.puts "   |"
+		somefile.print "|   "
+		for i in 0...num
+			somefile.print data[2][i]
+		end
+		somefile.puts "   |"
+		somefile.print "|   "
+		for i in 0...num
+			somefile.print " "
+		end
+		somefile.puts "   |"
+		somefile.print "+---"
+		for i in 0...num
+			somefile.print "-"
+		end
+		somefile.puts "---+"
+		somefile.close
 	end
-	somefile.puts "   |"
-	somefile.print "|   "
-	for i in 0...num
-		somefile.print data[2][i]
-	end
-	somefile.puts "   |"
-	somefile.print "|   "
-	for i in 0...num
-		somefile.print " "
-	end
-	somefile.puts "   |"
-	somefile.print "+---"
-	for i in 0...num
-		somefile.print "-"
-	end
-	somefile.puts "---+"
-	somefile.close
 end
 
 def board
