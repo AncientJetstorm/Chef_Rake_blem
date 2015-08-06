@@ -59,20 +59,20 @@ task :testConnection do
 end
 
 def loadConfig
-	if !File.file?("config.txt")
-		create = false
-		fname = "config.txt"
-		somefile = File.open(fname, "w")
-		somefile.puts "Number: "
-		somefile.puts "Type: "
-		somefile.puts "Text: "
-		somefile.close
-	end
+	require "./createApp.rb"
+	ruby "createApp.rb"
+	sh "tar cv app_name/ > app_name.tar"
+	sh "gzip app_name.tar"
+	sh "mv app_name.tar.gz app_name.spl"
+	puts "APP FILE CREATED"
+	# f = File.open("newFile.txt", "w")
+	# f.write("This is the first line\n")
+	# f.write("Second line")
+	# f.close
 end
 
 def createfile
 	allFiles = Dir.glob("*")
-	puts allFiles[4]
 	create = true
 	if !File.file?("config.txt")
 		create = false
@@ -84,12 +84,10 @@ def createfile
 		somefile.close
 		puts "\nPlease fill out the config.txt file\n\n"
 	end
-	puts "blem: #{create}"
 	if create
 		data = IO.readlines("config.txt")
 		data[2].slice! "Text: "
 		num = data[2].length
-		puts data[2]
 		fname = "sample.txt"
 		somefile = File.open(fname, "w")
 		somefile.print "+---"
