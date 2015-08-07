@@ -391,6 +391,13 @@ styles in <div> tags, similar to Bootstrap's grid system.
 			<td width=\"50%\">
 			")
 					end
+				elsif rowtype.include? "Triple"
+					if tablecount == 0
+						f.write("<table width=\"100%\">
+			<tr>
+			<td width=\"33%\">
+			")
+					end
 				end
 				f.write("<div class=\"panel-element-row\">
 			    <div id=\"element#{i}\" class=\"dashboard-element chart\">
@@ -414,6 +421,19 @@ styles in <div> tags, similar to Bootstrap's grid system.
 			")
 						tablecount = 0
 					end
+				elsif rowtype.include? "Triple"
+					if tablecount <= 1
+						f.write("</td>
+			<td width=\"33%\">
+			")
+						tablecount += 1
+					elsif tablecount == 2
+						f.write("</td>
+			</tr>
+			</table>
+			")
+						tablecount = 0
+					end	
 				end
 			end
 
