@@ -64,7 +64,11 @@ def loadConfig
 	sh "tar cv app_name/ > app_name.tar"
 	sh "gzip app_name.tar"
 	sh "mv app_name.tar.gz app_name.spl"
+	puts ""
 	puts "APP FILE CREATED"
+	puts "Install file through Splunk instance"
+	puts "Then restart the Splunk instance"
+	puts ""
 	# f = File.open("newFile.txt", "w")
 	# f.write("This is the first line\n")
 	# f.write("Second line")
