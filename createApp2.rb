@@ -305,7 +305,36 @@ require([
 		")
 				for i in 0..data.length - 5
 					charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
-					f.write("var element#{i} = new ChartElement({
+                    if charttype.include? "event"
+
+                    elsif charttype.include? "table"
+                        f.write("var element#{i} = new TableElement({
+            \"id\": \"element#{i}\",
+            \"count\": 10,
+            \"dataOverlayMode\": \"none\",
+            \"drilldown\": \"cell\",
+            \"rowNumbers\": \"false\",
+            \"wrap\": \"true\",
+            \"managerid\": \"search#{i}\",
+            \"el\": $('#element#{i}')
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();")
+                    elsif charttype.include? "single"
+                        f.write("var element#{i} = new SingleElement({
+            \"id\": \"element#{i}\",
+            \"linkView\": \"search\",
+            \"drilldown\": \"none\",
+            \"managerid\": \"search#{i}\",
+            \"el\": $('#element#{i}')
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();")
+                    elsif charttype.include? "map"
+                        f.write("var element#{i} = new MapElement({
+            \"id\": \"element#{i}\",
+            \"resizable\": true,
+            \"managerid\": \"search#{i}\",
+            \"el\": $('#element#{i}')
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();")
+                    else        
+					   f.write("var element#{i} = new ChartElement({
              \"id\": \"element#{i}\",
              \"charting.chart\": \"#{charttype}\",
              \"resizable\": false,
@@ -313,6 +342,7 @@ require([
              \"el\": $('#element#{i}')
          }, {tokens: true, tokenNamespace: \"submitted\"}).render();
 		")
+                    end
 				end
 				
 				f.write("
@@ -384,6 +414,14 @@ styles in <div> tags, similar to Bootstrap's grid system.
 				charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
 				rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0].to_s
 				panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
+                if charttype.include? "event"
+                elsif charttype.include? "table"
+                elsif charttype.include? "single"
+                elsif charttype.include? "map"
+                else
+                    charttype = "chart"
+                end
+                        
 				if rowtype.include? "Double"
 					if tablecount == 0
 						f.write("<table width=\"100%\">
@@ -398,9 +436,9 @@ styles in <div> tags, similar to Bootstrap's grid system.
 			<td width=\"33%\">
 			")
 					end
-				end
+				end     
 				f.write("<div class=\"panel-element-row\">
-			    <div id=\"element#{i}\" class=\"dashboard-element chart\">
+			    <div id=\"element#{i}\" class=\"dashboard-element #{charttype}\">
 			        <div class=\"panel-head\">
 			            <h3>#{panelname}</h3>
 			        </div>

@@ -1,8 +1,7 @@
-Search: "| inputlookup musicdata.csv | search bc_uri=/sync/addtolibrary* | stats count by artist_name | sort count desc | table artist_name count | head 5" ChartType: "pie" RowType: "Triple" PanelName: "panelnamething"
-Search: "| inputlookup musicdata.csv | search bc_uri=/sync/addtolibrary* | stats count by track_name | sort count desc | table track_name count " ChartType: "pie" RowType: "Triple" PanelName: "othername"
-Search: "| inputlookup musicdata.csv | search bc_uri=/sync/addtolibrary* | stats count by artist_name | sort count desc | table artist_name count | head 5" ChartType: "pie" RowType: "Triple" PanelName: "panelnamething"
-Search: "| inputlookup musicdata.csv | search eventtype=* | stats count by eventtype" ChartType: "pie" RowType: "Single" PanelName: "thatname"
+Search: "| inputlookup musicdata.csv | search bc_uri=/sync/addtolibrary* | stats count by artist_name | sort count desc | table artist_name count | head 5" ChartType: "pie" RowType: "Double" PanelName: "panelnamething"
+Search: "| inputlookup musicdata.csv | search bc_uri=/sync/addtolibrary* | stats count by track_name | sort count desc | table track_name count " ChartType: "table" RowType: "Double" PanelName: "othername"
+Search: "| inputlookup musicdata.csv | search eventtype=* | stats count by eventtype" ChartType: "bar" RowType: "Single" PanelName: "thatname"
 
 Example == Search: "| inputlookup musicdata.csv | search eventtype=* | stats count by eventtype" ChartType: "pie" RowType: "Single" PanelName: "Top Devices Used"
-Chart Types == table, pie, 
+Chart Types == event, table, line, area, column, bar, pie, scatter, bubble, single, radialGauge, fillerGauge, markerGauge, map
 Row Type == Single, Double, Triple
