@@ -60,23 +60,19 @@ end
 
 def loadConfig
 	require "./createApp.rb"
-	ruby "createApp.rb"
+	ruby "createApp2.rb"
+	board "App created"
 	sh "tar cv app_name/ > app_name.tar"
 	sh "gzip app_name.tar"
 	sh "mv app_name.tar.gz app_name.spl"
 	puts ""
-	puts "APP FILE CREATED"
-	puts "Install file through Splunk instance"
-	puts "Then restart the Splunk instance"
+	board "Install file through Splunk instance"
+	board "Then restart the Splunk instance"
 	puts ""
-	# f = File.open("newFile.txt", "w")
-	# f.write("This is the first line\n")
-	# f.write("Second line")
-	# f.close
 end
 
 def createfile
-	allFiles = Dir.glob("*")
+	# allFiles = Dir.glob("*")
 	create = true
 	if !File.file?("config.txt")
 		create = false
@@ -123,10 +119,8 @@ def createfile
 	end
 end
 
-def board
-	data = IO.readlines("config.txt")
-	data[2].slice! "Text: "
-	num = data[2].length
+def board(text)
+	num = text.length
 	print "+---"
 	for i in 0..num
 		print "-"
@@ -139,7 +133,7 @@ def board
 	puts "   |"
 	print "|   "
 	for i in 0..num
-		print data[2][i]
+		print text[i]
 	end
 	puts "    |"
 	print "|   "
