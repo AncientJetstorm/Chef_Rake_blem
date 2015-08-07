@@ -1,6 +1,7 @@
 require 'fileutils'
 
 data = IO.readlines("config.txt")
+tablecount = 0
 
 FileUtils::mkdir_p 'app_name/appserver'
 	FileUtils::mkdir_p 'app_name/appserver/templates'
@@ -303,10 +304,7 @@ require([
         //
 		")
 				for i in 0..data.length - 5
-					search = data[i].scan(/Search: "(.*)" ChartType:/)[0][0]
 					charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
-					rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0]
-					panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
 					f.write("var element#{i} = new ChartElement({
              \"id\": \"element#{i}\",
              \"charting.chart\": \"#{charttype}\",
@@ -384,8 +382,16 @@ styles in <div> tags, similar to Bootstrap's grid system.
 
 			for i in 0..data.length - 5
 				charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
-				rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0]
+				rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0].to_s
 				panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
+				if rowtype.include? "Double"
+					if tablecount == 0
+						f.write("<table width=\"100%\">
+			<tr>
+			<td width=\"50%\">
+			")
+					end
+				end
 				f.write("<div class=\"panel-element-row\">
 			    <div id=\"element#{i}\" class=\"dashboard-element chart\">
 			        <div class=\"panel-head\">
@@ -393,7 +399,22 @@ styles in <div> tags, similar to Bootstrap's grid system.
 			        </div>
 		        </div>
 		    </div>
+		    <br>
 		    ")
+				if rowtype.include? "Double"
+					if tablecount == 0
+						f.write("</td>
+			<td>
+			")
+						tablecount += 1
+					elsif tablecount == 1
+						f.write("</td>
+			</tr>
+			</table>
+			")
+						tablecount = 0
+					end
+				end
 			end
 
              f.write("
