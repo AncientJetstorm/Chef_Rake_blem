@@ -438,42 +438,69 @@ require([
 
 		FileUtils::mkdir_p 'app_name/django/app_name/templates'
 			f = File.open("app_name/django/app_name/templates/home.html", "w")
-			f.write("{% extends \"splunkdj:base_with_account_bar.html\" %}
-
-{% load splunkmvc %}
-
-{% block title %}{{app_name}} Home Page{% endblock title %}
-
-{% block css %}
+			f.write("<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+    <meta charset=\"utf-8\" />
+    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />
+    <title>App Documentation Home</title>
+    <link rel=\"shortcut icon\" href=\"{{SPLUNKWEB_URL_PREFIX}}/static/img/favicon.ico\" />
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"{{SPLUNKWEB_URL_PREFIX}}/static/css/build/bootstrap.min.css\" />
+    <link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"{{SPLUNKWEB_URL_PREFIX}}/static/css/build/pages/dashboard-simple-bootstrap.min.css\" />
+    <link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"{{SPLUNKWEB_URL_PREFIX}}/static/app/search/dashboard.css\" />
+    <script src=\"{{SPLUNKWEB_URL_PREFIX}}/config?autoload=1\"></script>
+    <script src=\"{{SPLUNKWEB_URL_PREFIX}}/static/js/i18n.js\"></script>
+    <script src=\"{{SPLUNKWEB_URL_PREFIX}}/i18ncatalog?autoload=1\"></script>
+    <script src=\"{{SPLUNKWEB_URL_PREFIX}}/static/js/build/simplexml.min/config.js\"></script>
     <link rel=\"stylesheet\" type=\"text/css\" href=\"{{STATIC_URL}}{{app_name}}/custom.css\" />
+    <script src=\"{{STATIC_URL}}{{app_name}}/custom.js\"></script>
+    <script src=\"{{STATIC_URL}}{{app_name}}/override.js\"></script>
+    <!--[if IE 7]><link rel=\"stylesheet\" href=\"{{SPLUNKWEB_URL_PREFIX}}/static/css/sprites-ie7.css\" /><![endif]-->
+</head>
+<body class=\"simplexml preload\">
 
-    <style>        
-        .main-area {
-            margin: 0px auto;
-            margin-top: 30px;
-            margin-bottom: 30px;
-            padding: 10px;
-            width: 300px;
-        }    
-    </style>
-{% endblock css %}
-
-{% block content %}
-
+<!-- 
+BEGIN LAYOUT
+This section contains the layout for the dashboard. Splunk uses proprietary
+styles in <div> tags, similar to Bootstrap's grid system. 
+-->
+<a class=\"navSkip\" href=\"#navSkip\" tabindex=\"1\">Screen reader users, click here to skip the navigation bar</a>
+<div class=\"header\">
+    <div id=\"placeholder-splunk-bar\">
+        <a href=\"{{SPLUNKWEB_URL_PREFIX}}/app/launcher/home\" class=\"brand\" title=\"splunk > listen to your data\">splunk<strong>></strong></a>
+    </div>
+    <div id=\"placeholder-app-bar\"></div>
+</div>
+<a id=\"navSkip\"></a>
     <div>
         <div class=\"main-area\">
-            <p>Template message: {{message}}</p>
-            <p class=\"muted\">You should also look in the JavaScript console...</p>
+            <table width=\"100%\">
+                <tr>
+                	<td width=\"50%\">
+		            	<div class=\"panel-element-row\">
+		                    <div id=\"element1\" class=\"dashboard-element chart\" style=\"width: 100%\">
+		                        <div class=\"panel-body\"></div>
+		                    </div>
+		                </div>
+                	</td>
+                	<td>
+	                	<div class=\"panel-element-row\">
+	                    	<div id=\"element2\" class=\"dashboard-element table\"></div>
+	                	</div>
+                	</td>
+                </tr>
+            </table>
+            <br><br>
+            <div class=\"panel-element-row\">
+            	<div id=\"element3\" class=\"dashboard-element chart\">
+            	</div>
+            </div>
         </div>
     </div>
+<div class=\"footer\"></div>
 
-{% endblock content%}
-
-{% block js %}    
-    <script>
-        console.log(\"Custom JavaScript Goes Here (look in your template)!\");
-    </script>
-{% endblock js %}")
+</body>
+</html>")
 			f.close
 
 		FileUtils::mkdir_p 'app_name/django/app_name/templatetags'
