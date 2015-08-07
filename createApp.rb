@@ -43,7 +43,7 @@ label = app_name
 [launcher]
 author = 
 description = 
-version = 1.0.0
+version = 1.0
 ")
 	f.close
 
@@ -67,20 +67,6 @@ FileUtils::mkdir_p 'app_name/django'
 		f = File.open("app_name/django/app_name/__init__.py", "w")
 		f.write("# Copyright 2015
 ")
-		f.close
-
-		f = File.open("app_name/django/app_name/__init__.pyo", "w")
-		f.write("03f3 0d0a dd65 a655 6300 0000 0000 0000
-0001 0000 0040 0000 0073 0400 0000 6400
-0053 2801 0000 004e 2800 0000 0028 0000
-0000 2800 0000 0028 0000 0000 734a 0000
-002f 4170 706c 6963 6174 696f 6e73 2f53
-706c 756e 6b2f 6574 632f 6170 7073 2f74
-656d 706c 6174 655f 6170 702f 646a 616e
-676f 2f74 656d 706c 6174 655f 6170 702f
-5f5f 696e 6974 5f5f 2e70 7974 0800 0000
-3c6d 6f64 756c 653e 0100 0000 7300 0000
-00")
 		f.close
 
 		f = File.open("app_name/django/app_name/tests.py", "w")
@@ -117,88 +103,13 @@ urlpatterns = patterns('',
 		f.write("from django.contrib.auth.decorators import login_required
 from splunkdj.decorators.render import render_to
 
-@render_to('template_app:home.html')
+@render_to('app_name:home.html')
 @login_required
 def home(request):
     return {
-        \"message\": \"Hello World from template_app!\",
-        \"app_name\": \"template_app\"
+        \"message\": \"Hello World from app_name!\",
+        \"app_name\": \"app_name\"
     }")
-		f.close
-
-		f = File.open("app_name/django/app_name/urls.pyo", "w")
-		f.write("03f3 0d0a dd65 a655 6300 0000 0000 0000
-0007 0000 0040 0000 0073 4e00 0000 6400
-0064 0100 6c00 006d 0100 5a01 006d 0200
-5a02 006d 0300 5a03 0001 6400 0064 0200
-6c04 006d 0500 5a06 0001 6501 0064 0300
-6503 0064 0400 6405 0064 0600 6407 0083
-0201 8302 005a 0700 6408 0053 2809 0000
-0069 ffff ffff 2803 0000 0074 0800 0000
-7061 7474 6572 6e73 7407 0000 0069 6e63
-6c75 6465 7403 0000 0075 726c 2801 0000
-0074 0f00 0000 7265 6e64 6572 5f74 656d
-706c 6174 6574 0000 0000 7307 0000 005e
-686f 6d65 2f24 7317 0000 0074 656d 706c
-6174 655f 6170 702e 7669 6577 732e 686f
-6d65 7404 0000 006e 616d 6574 0400 0000
-686f 6d65 4e28 0800 0000 7410 0000 0064
-6a61 6e67 6f2e 636f 6e66 2e75 726c 7352
-0000 0000 5201 0000 0052 0200 0000 7416
-0000 0073 706c 756e 6b64 6a2e 7574 696c
-6974 792e 7669 6577 7352 0300 0000 7406
-0000 0072 656e 6465 7274 0b00 0000 7572
-6c70 6174 7465 726e 7328 0000 0000 2800
-0000 0028 0000 0000 7346 0000 002f 4170
-706c 6963 6174 696f 6e73 2f53 706c 756e
-6b2f 6574 632f 6170 7073 2f74 656d 706c
-6174 655f 6170 702f 646a 616e 676f 2f74
-656d 706c 6174 655f 6170 702f 7572 6c73
-2e70 7974 0800 0000 3c6d 6f64 756c 653e
-0100 0000 7306 0000 001c 0110 0206 01")
-		f.close
-
-		f = File.open("app_name/django/app_name/views.pyo", "w")
-		f.write("03f3 0d0a dd65 a655 6300 0000 0000 0000
-0003 0000 0040 0000 0073 3f00 0000 6400
-0064 0100 6c00 006d 0100 5a01 0001 6400
-0064 0200 6c02 006d 0300 5a03 0001 6503
-0064 0300 8301 0065 0100 6404 0084 0000
-8301 0083 0100 5a04 0064 0500 5328 0600
-0000 69ff ffff ff28 0100 0000 740e 0000
-006c 6f67 696e 5f72 6571 7569 7265 6428
-0100 0000 7409 0000 0072 656e 6465 725f
-746f 7316 0000 0074 656d 706c 6174 655f
-6170 703a 686f 6d65 2e68 746d 6c63 0100
-0000 0100 0000 0300 0000 4300 0000 7312
-0000 0069 0200 6401 0064 0200 3664 0300
-6404 0036 5328 0500 0000 4e73 1e00 0000
-4865 6c6c 6f20 576f 726c 6420 6672 6f6d
-2074 656d 706c 6174 655f 6170 7021 7407
-0000 006d 6573 7361 6765 740c 0000 0074
-656d 706c 6174 655f 6170 7074 0800 0000
-6170 705f 6e61 6d65 2800 0000 0028 0100
-0000 7407 0000 0072 6571 7565 7374 2800
-0000 0028 0000 0000 7347 0000 002f 4170
-706c 6963 6174 696f 6e73 2f53 706c 756e
-6b2f 6574 632f 6170 7073 2f74 656d 706c
-6174 655f 6170 702f 646a 616e 676f 2f74
-656d 706c 6174 655f 6170 702f 7669 6577
-732e 7079 7404 0000 0068 6f6d 6504 0000
-0073 0600 0000 0003 0301 0701 4e28 0500
-0000 741e 0000 0064 6a61 6e67 6f2e 636f
-6e74 7269 622e 6175 7468 2e64 6563 6f72
-6174 6f72 7352 0000 0000 741a 0000 0073
-706c 756e 6b64 6a2e 6465 636f 7261 746f
-7273 2e72 656e 6465 7252 0100 0000 5206
-0000 0028 0000 0000 2800 0000 0028 0000
-0000 7347 0000 002f 4170 706c 6963 6174
-696f 6e73 2f53 706c 756e 6b2f 6574 632f
-6170 7073 2f74 656d 706c 6174 655f 6170
-702f 646a 616e 676f 2f74 656d 706c 6174
-655f 6170 702f 7669 6577 732e 7079 7408
-0000 003c 6d6f 6475 6c65 3e01 0000 0073
-0600 0000 1001 1002 0901")
 		f.close
 
 		FileUtils::mkdir_p 'app_name/django/app_name/static'
@@ -527,69 +438,42 @@ require([
 
 		FileUtils::mkdir_p 'app_name/django/app_name/templates'
 			f = File.open("app_name/django/app_name/templates/home.html", "w")
-			f.write("<!DOCTYPE html>
-<html lang=\"en\">
-<head>
-    <meta charset=\"utf-8\" />
-    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />
-    <title>App Documentation Home</title>
-    <link rel=\"shortcut icon\" href=\"{{SPLUNKWEB_URL_PREFIX}}/static/img/favicon.ico\" />
-    <link rel=\"stylesheet\" type=\"text/css\" href=\"{{SPLUNKWEB_URL_PREFIX}}/static/css/build/bootstrap.min.css\" />
-    <link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"{{SPLUNKWEB_URL_PREFIX}}/static/css/build/pages/dashboard-simple-bootstrap.min.css\" />
-    <link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"{{SPLUNKWEB_URL_PREFIX}}/static/app/search/dashboard.css\" />
-    <script src=\"{{SPLUNKWEB_URL_PREFIX}}/config?autoload=1\"></script>
-    <script src=\"{{SPLUNKWEB_URL_PREFIX}}/static/js/i18n.js\"></script>
-    <script src=\"{{SPLUNKWEB_URL_PREFIX}}/i18ncatalog?autoload=1\"></script>
-    <script src=\"{{SPLUNKWEB_URL_PREFIX}}/static/js/build/simplexml.min/config.js\"></script>
-    <link rel=\"stylesheet\" type=\"text/css\" href=\"{{STATIC_URL}}{{app_name}}/custom.css\" />
-    <script src=\"{{STATIC_URL}}{{app_name}}/custom.js\"></script>
-    <script src=\"{{STATIC_URL}}{{app_name}}/override.js\"></script>
-    <!--[if IE 7]><link rel=\"stylesheet\" href=\"{{SPLUNKWEB_URL_PREFIX}}/static/css/sprites-ie7.css\" /><![endif]-->
-</head>
-<body class=\"simplexml preload\">
+			f.write("{% extends \"splunkdj:base_with_account_bar.html\" %}
 
-<!-- 
-BEGIN LAYOUT
-This section contains the layout for the dashboard. Splunk uses proprietary
-styles in <div> tags, similar to Bootstrap's grid system. 
--->
-<a class=\"navSkip\" href=\"#navSkip\" tabindex=\"1\">Screen reader users, click here to skip the navigation bar</a>
-<div class=\"header\">
-    <div id=\"placeholder-splunk-bar\">
-        <a href=\"{{SPLUNKWEB_URL_PREFIX}}/app/launcher/home\" class=\"brand\" title=\"splunk > listen to your data\">splunk<strong>></strong></a>
-    </div>
-    <div id=\"placeholder-app-bar\"></div>
-</div>
-<a id=\"navSkip\"></a>
+{% load splunkmvc %}
+
+{% block title %}{{app_name}} Home Page{% endblock title %}
+
+{% block css %}
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"{{STATIC_URL}}{{app_name}}/custom.css\" />
+
+    <style>        
+        .main-area {
+            margin: 0px auto;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            padding: 10px;
+            width: 300px;
+        }    
+    </style>
+{% endblock css %}
+
+{% block content %}
+
     <div>
         <div class=\"main-area\">
-            <table width=\"100%\">
-                <tr>
-                	<td width=\"50%\">
-		            	<div class=\"panel-element-row\">
-		                    <div id=\"element1\" class=\"dashboard-element chart\" style=\"width: 100%\">
-		                        <div class=\"panel-body\"></div>
-		                    </div>
-		                </div>
-                	</td>
-                	<td>
-	                	<div class=\"panel-element-row\">
-	                    	<div id=\"element2\" class=\"dashboard-element table\"></div>
-	                	</div>
-                	</td>
-                </tr>
-            </table>
-            <br><br>
-            <div class=\"panel-element-row\">
-            	<div id=\"element3\" class=\"dashboard-element chart\">
-            	</div>
-            </div>
+            <p>Template message: {{message}}</p>
+            <p class=\"muted\">You should also look in the JavaScript console...</p>
         </div>
     </div>
-<div class=\"footer\"></div>
 
-</body>
-</html>")
+{% endblock content%}
+
+{% block js %}    
+    <script>
+        console.log(\"Custom JavaScript Goes Here (look in your template)!\");
+    </script>
+{% endblock js %}")
 			f.close
 
 		FileUtils::mkdir_p 'app_name/django/app_name/templatetags'
@@ -597,22 +481,25 @@ styles in <div> tags, similar to Bootstrap's grid system.
 			f.write("")
 			f.close
 
-			f = File.open("app_name/django/app_name/templatetags/__init__.pyo", "w")
-			f.write("03f3 0d0a dd65 a655 6300 0000 0000 0000
-0001 0000 0040 0000 0073 0400 0000 6400
-0053 2801 0000 004e 2800 0000 0028 0000
-0000 2800 0000 0028 0000 0000 7357 0000
-002f 4170 706c 6963 6174 696f 6e73 2f53
-706c 756e 6b2f 6574 632f 6170 7073 2f74
-656d 706c 6174 655f 6170 702f 646a 616e
-676f 2f74 656d 706c 6174 655f 6170 702f
-7465 6d70 6c61 7465 7461 6773 2f5f 5f69
-6e69 745f 5f2e 7079 7408 0000 003c 6d6f
-6475 6c65 3e01 0000 0073 0000 0000")
-			f.close
-
 f = File.open("app_name/README", "w")
-f.write("This is the first line\nSecond line")
+f.write("Introduction
+------------
+Describe your application here.
+
+Installation
+------------
+Describe how to install your application here (if applicable).
+
+Usage
+-----
+Describe how to use your application here.
+
+TODO:
+-----
+If you intend to upload this application to Splunk Apps, we strongly recommend 
+that you update the app.conf file (located in your app's /default directory) 
+with your name, a one-sentence description of your application, and the
+version number of your application.")
 f.close
 
 FileUtils::mkdir_p 'app_name/lookups'
