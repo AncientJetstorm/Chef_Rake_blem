@@ -1,6 +1,5 @@
 Search: "" ChartType: "" RowType: "" PanelName: ""
 
-
 Example == Search: "| inputlookup musicdata.csv | search eventtype=* | stats count by eventtype" ChartType: "pie" RowType: "Single" PanelName: "Top Devices Used"
 Chart Types == event, table, line, area, column, bar, pie, scatter, bubble, single, radialGauge, fillerGauge, markerGauge, map
 Row Type == Single, Double, Triple
