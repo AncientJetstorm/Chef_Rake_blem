@@ -260,7 +260,7 @@ require([
         // SEARCH MANAGERS
         //
 		")
-				for i in 0..data.length - 5
+				for i in 0..data.length - 6
 					search = data[i].scan(/Search: "(.*)" ChartType:/)[0][0]
 					f.write("var search#{i} = new SearchManager({
              \"id\": \"search#{i}\",
@@ -304,8 +304,12 @@ require([
         // VIEWS: VISUALIZATION ELEMENTS
         //
 		")
-				for i in 0..data.length - 5
+				for i in 0..data.length - 6
 					charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
+                    if data[i].include? "ColorScheme:"
+                        colorscheme = data[i].scan(/ColorScheme: "(.*)"/)[0][0]
+                        colorscheme = colorscheme.gsub('#', '0x')
+                    end
                     if charttype.include? "event"
 
                     elsif charttype.include? "table"
@@ -337,7 +341,12 @@ require([
                     else        
 					   f.write("var element#{i} = new ChartElement({
              \"id\": \"element#{i}\",
-             \"charting.chart\": \"#{charttype}\",
+             \"charting.chart\": \"#{charttype}\",")
+                       if data[i].include? "ColorScheme:"
+                        f.write("
+            \"charting.seriesColors\": \"" + colorscheme + "\",")
+                       end
+                       f.write("
              \"resizable\": false,
              \"managerid\": \"search#{i}\",
              \"el\": $('#element#{i}')
@@ -411,10 +420,10 @@ styles in <div> tags, similar to Bootstrap's grid system.
         <div class=\"main-area\">
         	")
 
-			for i in 0..data.length - 5
+			for i in 0..data.length - 6
 				charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
 				rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0].to_s
-				panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
+				panelname = data[i].scan(/PanelName: "(.*)" ColorScheme:/)[0][0]
                 if charttype.include? "event"
                 elsif charttype.include? "table"
                 elsif charttype.include? "single"

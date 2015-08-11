@@ -1,5 +1,6 @@
-AppName: "" Search: "" ChartType: "" RowType: "" PanelName: ""
+AppName: "" Search: "" ChartType: "" RowType: "" PanelName: "" ColorScheme: ""
 
-Example == Search: "| inputlookup musicdata.csv | search eventtype=* | stats count by eventtype" ChartType: "pie" RowType: "Single" PanelName: "Top Devices Used"
+Example == AppName: "First_App" Search: "| inputlookup musicdata.csv | search eventtype=* | stats count by eventtype" ChartType: "pie" RowType: "Single" PanelName: "Top Devices Used" ColorScheme: "[#345ffb, #ff456b]"
 Chart Types == event, table, line, area, column, bar, pie, scatter, bubble, single, radialGauge, fillerGauge, markerGauge, map
 Row Type == Single, Double, Triple
+App Name need on first line only, Color Scheme is not required but accepted on any line
