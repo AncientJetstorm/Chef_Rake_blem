@@ -1,11 +1,12 @@
 require 'fileutils'
 
 data = IO.readlines("config.txt")
+app_name = data[0].scan(/AppName: "(.*)" Search:/)[0][0]
 tablecount = 0
 
-FileUtils::mkdir_p 'app_name/appserver'
-	FileUtils::mkdir_p 'app_name/appserver/templates'
-		f = File.open("app_name/appserver/templates/redirect.tmpl", "w")
+FileUtils::mkdir_p app_name + '/appserver'
+	FileUtils::mkdir_p app_name + '/appserver/templates'
+		f = File.open(app_name + "/appserver/templates/redirect.tmpl", "w")
 		f.write("<%
 import cherrypy, re
 from lib.i18n import current_lang
@@ -21,14 +22,14 @@ locale = \"-\".join([ x.lower() for x in current_lang()[0:2] if x is not None ])
 </script>")
 		f.close
 
-FileUtils::mkdir_p 'app_name/bin'
-	f = File.open("app_name/bin/README", "w")
+FileUtils::mkdir_p app_name + '/bin'
+	f = File.open(app_name + "/bin/README", "w")
 	f.write("Put search commands, scripted inputs and scripted lookups here...
 ")
 	f.close
 
-FileUtils::mkdir_p 'app_name/default'
-	f = File.open("app_name/default/app.conf", "w")
+FileUtils::mkdir_p app_name + '/default'
+	f = File.open(app_name + "/default/app.conf", "w")
 	f.write("#
 # Splunk app configuration file
 #
@@ -37,11 +38,11 @@ FileUtils::mkdir_p 'app_name/default'
 is_configured = 0
 
 [package]
-id = app_name
+id = " + app_name + "
 
 [ui]
 is_visible = True
-label = app_name
+label = " + app_name + "
 
 [launcher]
 author = 
@@ -50,29 +51,29 @@ version = 1.0
 ")
 	f.close
 
-	FileUtils::mkdir_p 'app_name/default/data'
-		FileUtils::mkdir_p 'app_name/default/data/ui'
-			FileUtils::mkdir_p 'app_name/default/data/ui/nav'
-				f = File.open("app_name/default/data/ui/nav/default.xml", "w")
+	FileUtils::mkdir_p app_name + '/default/data'
+		FileUtils::mkdir_p app_name + '/default/data/ui'
+			FileUtils::mkdir_p app_name + '/default/data/ui/nav'
+				f = File.open(app_name + "/default/data/ui/nav/default.xml", "w")
 				f.write("<nav>
     <view name=\"default\" default=\"true\"/>
-    <a href=\"/dj/redirector/app_name/home\">Home</a>
+    <a href=\"/dj/redirector/" + app_name + "/home\">Home</a>
 </nav>")
 				f.close
 
-			FileUtils::mkdir_p 'app_name/default/data/ui/views'
-				f = File.open("app_name/default/data/ui/views/default.xml", "w")
-				f.write("<view template=\"app_name:/templates/redirect.tmpl\" isVisible=\"false\"><label>Home</label></view>")
+			FileUtils::mkdir_p app_name + '/default/data/ui/views'
+				f = File.open(app_name + "/default/data/ui/views/default.xml", "w")
+				f.write("<view template=\"" + app_name + ":/templates/redirect.tmpl\" isVisible=\"false\"><label>Home</label></view>")
 				f.close
 
-FileUtils::mkdir_p 'app_name/django'
-	FileUtils::mkdir_p 'app_name/django/app_name'
-		f = File.open("app_name/django/app_name/__init__.py", "w")
+FileUtils::mkdir_p app_name + '/django'
+	FileUtils::mkdir_p app_name + '/django/' + app_name
+		f = File.open(app_name + "/django/" + app_name + "/__init__.py", "w")
 		f.write("# Copyright 2015
 ")
 		f.close
 
-		f = File.open("app_name/django/app_name/tests.py", "w")
+		f = File.open(app_name + "/django/" + app_name + "/tests.py", "w")
 		f.write("\"\"\"
 This file demonstrates writing tests using the unittest module. These will pass
 when you run \"manage.py test\".
@@ -92,32 +93,32 @@ class SimpleTest(TestCase):
 ")
 		f.close
 
-		f = File.open("app_name/django/app_name/urls.py", "w")
+		f = File.open(app_name + "/django/" + app_name + "/urls.py", "w")
 		f.write("from django.conf.urls import patterns, include, url
 from splunkdj.utility.views import render_template as render
 
 urlpatterns = patterns('',
-    url(r'^home/$', 'app_name.views.home', name='home'), 
+    url(r'^home/$', '" + app_name + ".views.home', name='home'), 
 )
 ")
 		f.close
 
-		f = File.open("app_name/django/app_name/views.py", "w")
+		f = File.open(app_name + "/django/" + app_name + "/views.py", "w")
 		f.write("from django.contrib.auth.decorators import login_required
 from splunkdj.decorators.render import render_to
 
-@render_to('app_name:home.html')
+@render_to('" + app_name + ":home.html')
 @login_required
 def home(request):
     return {
-        \"message\": \"Hello World from app_name!\",
-        \"app_name\": \"app_name\"
+        \"message\": \"Hello World from " + app_name + "!\",
+        \"" + app_name + "\": \"" + app_name + "\"
     }")
 		f.close
 
-		FileUtils::mkdir_p 'app_name/django/app_name/static'
-			FileUtils::mkdir_p 'app_name/django/app_name/static/app_name'
-				f = File.open("app_name/django/app_name/static/app_name/custom.css", "w")
+		FileUtils::mkdir_p app_name + '/django/' + app_name + '/static'
+			FileUtils::mkdir_p app_name + '/django/' + app_name + '/static/' + app_name
+				f = File.open(app_name + "/django/" + app_name + "/static/" + app_name + "/custom.css", "w")
 				f.write(".main-area {
 	border: solid;
 	border-width: 1px;
@@ -130,7 +131,7 @@ def home(request):
 }")
 				f.close
 
-				f = File.open("app_name/django/app_name/static/app_name/custom.js", "w")
+				f = File.open(app_name + "/django/" + app_name + "/static/" + app_name + "/custom.js", "w")
 				f.write("var urlprefix = document.URL.substr(0, document.URL.search(\"/dj\"));
 
 require.config({
@@ -370,8 +371,8 @@ require([
 );")
 				f.close
 
-		FileUtils::mkdir_p 'app_name/django/app_name/templates'
-			f = File.open("app_name/django/app_name/templates/home.html", "w")
+		FileUtils::mkdir_p app_name + '/django/' + app_name + '/templates'
+			f = File.open(app_name + "/django/" + app_name + "/templates/home.html", "w")
 			f.write("<!DOCTYPE html>
 <html lang=\"en\">
 <head>
@@ -484,12 +485,12 @@ styles in <div> tags, similar to Bootstrap's grid system.
  </html>")
 			f.close
 
-		FileUtils::mkdir_p 'app_name/django/app_name/templatetags'
-			f = File.open("app_name/django/app_name/templatetags/__init__.py", "w")
+		FileUtils::mkdir_p app_name + '/django/' + app_name + '/templatetags'
+			f = File.open(app_name + "/django/" + app_name + "/templatetags/__init__.py", "w")
 			f.write("")
 			f.close
 
-f = File.open("app_name/README", "w")
+f = File.open(app_name + "/README", "w")
 f.write("Introduction
 ------------
 Describe your application here.
@@ -510,7 +511,7 @@ with your name, a one-sentence description of your application, and the
 version number of your application.")
 f.close
 
-FileUtils::mkdir_p 'app_name/lookups'
+FileUtils::mkdir_p app_name + '/lookups'
 
-FileUtils::mkdir_p 'app_name/static'
+FileUtils::mkdir_p app_name + '/static'
 
