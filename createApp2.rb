@@ -260,9 +260,23 @@ require([
         // SEARCH MANAGERS
         //
 		")
-				for i in 0..data.length - 6
-					search = data[i].scan(/Search: "(.*)" ChartType:/)[0][0]
-					f.write("var search#{i} = new SearchManager({
+				for i in 0..data.length - 8
+                    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
+                    if charttype.include? 'text'
+
+                    elsif charttype.include? 'radio'
+
+                    elsif charttype.include? 'dropdown'
+
+                    elsif charttype.include? 'checkboxgroup'
+
+                    elsif charttype.include? 'multiselect'
+
+                    elsif charttype.include? 'timerangepicker'
+
+                    else
+					   search = data[i].scan(/Search: "(.*)" ChartType:/)[0][0]
+					   f.write("var search#{i} = new SearchManager({
              \"id\": \"search#{i}\",
              \"search\": \"#{search}\",
              \"latest_time\": \"\",
@@ -275,6 +289,7 @@ require([
              \"runWhenTimeIsUndefined\": false
          }, {tokens: true, tokenNamespace: \"submitted\"});
 		")
+                    end
 				end
 
 				f.write("
@@ -304,13 +319,25 @@ require([
         // VIEWS: VISUALIZATION ELEMENTS
         //
 		")
-				for i in 0..data.length - 6
+				for i in 0..data.length - 8
 					charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
                     if data[i].include? "ColorScheme:"
                         colorscheme = data[i].scan(/ColorScheme: "(.*)"/)[0][0]
                         colorscheme = colorscheme.gsub('#', '0x')
                     end
-                    if charttype.include? "event"
+                    if charttype.include? 'text'
+
+                    elsif charttype.include? 'radio'
+                            
+                    elsif charttype.include? 'dropdown'
+                    
+                    elsif charttype.include? 'checkboxgroup'
+                    
+                    elsif charttype.include? 'multiselect'
+
+                    elsif charttype.include? 'timerangepicker'
+                                
+                    elsif charttype.include? "event"
 
                     elsif charttype.include? "table"
                         f.write("var element#{i} = new TableElement({
@@ -358,7 +385,100 @@ require([
 				f.write("
         //
         // VIEWS: FORM INPUTS
-        //
+        //")
+
+                for i in 0..data.length - 8
+                    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
+                    inputvalue = data[i].scan(/Search: "(.*)" ChartType:/)
+                    inputvalue = inputvalue.gsub('$', '')
+                    if charttype.include? 'text'
+                        f.write("var input#{i} = new TextInput({
+            \"id\": \"input#{i}\",
+            \"default\": \"\",
+            \"value\": \"$form.#{inputvalue}$\",
+            \"el\": $('#input#{i}')
+        }, {tokens: true}).render();
+
+        input#{i}.on(\"change\", function(newValue) {
+            FormUtils.handleValueChange(input#{i});
+        });")
+                    elsif charttype.include? 'radio'
+                        choices = data[i].scan(/Choices: "(.*)"/)
+                        f.write("var input#{i} = new RadioGroupInput({
+            \"id\": \"input#{i}\",
+            \"choices\": #{choices},
+            \"selectFirstChoice\": false,
+            \"default\": \"1\",
+            \"searchWhenChanged\": true,
+            \"value\": \"$form.#{inputvalue}$\",
+            \"el\": $('#input#{i}')
+        }, {tokens: true}).render();
+
+        input#{i}.on(\"change\", function(newValue) {
+            FormUtils.handleValueChange(input#{i});
+        });")
+                    elsif charttype.include? 'dropdown'
+                        choices = data[i].scan(/Choices: "(.*)"/)
+                        f.write("var input#{i} = new DropdownInput({
+            \"id\": \"input#{i}\",
+            \"choices\": #{choices},
+            \"selectFirstChoice\": false,
+            \"searchWhenChanged\": true,
+            \"showClearButton\": true,
+            \"value\": \"$form.field_token$\",
+            \"el\": $('#input#{i}')
+        }, {tokens: true}).render();
+
+        input#{i}.on(\"change\", function(newValue) {
+            FormUtils.handleValueChange(input#{i});
+        });")
+                    elsif charttype.include? 'checkboxgroup'
+                        choices = data[i].scan(/Choices: "(.*)"/)
+                        f.write("var input#{i} = new CheckboxGroupInput({
+            \"id\": \"input#{i}\",
+            \"choices\": #{choices},
+            \"delimiter\": \"AND\",
+            \"searchWhenChanged\": true,
+            \"value\": \"$form.#{inputvalue}$\",
+            \"el\": $('#input#{i}')
+        }, {tokens: true}).render();
+
+        input#{i}.on(\"change\", function(newValue) {
+            FormUtils.handleValueChange(input#{i});
+        });")
+                    elsif charttype.include? 'multiselect'
+                        choices = data[i].scan(/Choices: "(.*)"/)
+                        f.write("var input#{i} = new MultiSelectInput({
+            \"id\": \"input#{i}\",
+            \"choices\": #{choices},
+            \"delimiter\": \"AND\",
+            \"searchWhenChanged\": true,
+            \"value\": \"$form.#{inputvalue}$\",
+            \"el\": $('#input#{i}')
+        }, {tokens: true}).render();
+
+        input#{i}.on(\"change\", function(newValue) {
+            FormUtils.handleValueChange(input#{i});
+        });")
+                    elsif charttype.include? 'timerangepicker'
+                        f.write("var input#{i} = new TimeRangeInput({
+            \"id\": \"input#{i}\",
+            \"default\": {\"latest_time\": null, \"earliest_time\": \"0\"},
+            \"searchWhenChanged\": true,
+            \"earliest_time\": \"$form.field#{i}.earliest$\",
+            \"latest_time\": \"$form.field#{i}.latest$\",
+            \"el\": $('#input#{i}')
+        }, {tokens: true}).render();
+
+        input#{i}.on(\"change\", function(newValue) {
+            FormUtils.handleValueChange(input#{i});
+        });")
+                    else
+                        
+                    end
+                end
+
+                f.write("
 
         // This section is only included for forms
         // Initialize time tokens to default
@@ -420,15 +540,32 @@ styles in <div> tags, similar to Bootstrap's grid system.
         <div class=\"main-area\">
         	")
 
-			for i in 0..data.length - 6
+			for i in 0..data.length - 8
 				charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
 				rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0].to_s
 				panelname = data[i].scan(/PanelName: "(.*)" ColorScheme:/)[0][0]
-                if charttype.include? "event"
+                if charttype.include? 'text'
+                    isForm = true
+                elsif charttype.include? 'radio'
+                    isForm = true
+                elsif charttype.include? 'dropdown'
+                    isForm = true
+                elsif charttype.include? 'checkboxgroup'
+                    isForm = true
+                elsif charttype.include? 'multiselect'
+                    isForm = true
+                elsif charttype.include? 'timerangepicker'
+                    isForm = true
+                elsif charttype.include? "event"
+                    isForm = false
                 elsif charttype.include? "table"
+                    isForm = false
                 elsif charttype.include? "single"
+                    isForm = false
                 elsif charttype.include? "map"
+                    isForm = false
                 else
+                    isForm = false
                     charttype = "chart"
                 end
                         
@@ -446,8 +583,13 @@ styles in <div> tags, similar to Bootstrap's grid system.
 			<td width=\"33%\">
 			")
 					end
-				end     
-				f.write("<div class=\"panel-element-row\">
+				end
+                if isForm
+                    f.write("<div class=\"input input-#{charttype}\" id=\"input#{i}\">
+            <label>#{panelname}</label>
+        </div>")
+                elsif !isForm
+				    f.write("<div class=\"panel-element-row\">
 			    <div id=\"element#{i}\" class=\"dashboard-element #{charttype}\">
 			        <div class=\"panel-head\">
 			            <h3>#{panelname}</h3>
@@ -456,6 +598,7 @@ styles in <div> tags, similar to Bootstrap's grid system.
 		    </div>
 		    <br>
 		    ")
+                end
 				if rowtype.include? "Double"
 					if tablecount == 0
 						f.write("</td>
