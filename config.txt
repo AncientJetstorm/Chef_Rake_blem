@@ -3,6 +3,6 @@ AppName: "" Search: "" ChartType: "" RowType: "" PanelName: "" ColorScheme: ""
 Chart Example == AppName: "First_App" Search: "| inputlookup musicdata.csv | search eventtype=* | stats count by eventtype" ChartType: "pie" RowType: "Single" PanelName: "Top Devices Used" ColorScheme: "[#345ffb, #ff456b]"
 Form Example == AppName: "First_App" Search"$field1$" ChartType: "dropdown" RowType: "Single" PanelName: "dd1" Choices: "[{"value": "1", "label": "1"},{"value": "2", "label": "2"},{"value": "3", "label": "3"}]"
 Chart Types == event, table, line, area, column, bar, pie, scatter, bubble, single, radialGauge, fillerGauge, markerGauge, map
-Form Types == text, radio, dropdown, checkboxgroup, multiselect, timerangepicker
+Form Types == text, radio, dropdown, checkboxgroup, multiselect, timerangepicker(Note for timerangepicker, in the Search field put the PanelName of the element being changed)
 Row Type == Single, Double, Triple
 App Name need on first line only, Color Scheme is not required but accepted on any line, Form Types currently in development

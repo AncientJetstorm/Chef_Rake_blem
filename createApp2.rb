@@ -5,121 +5,121 @@ app_name = data[0].scan(/AppName: "(.*)" Search:/)[0][0]
 tablecount = 0
 
 FileUtils::mkdir_p app_name + '/appserver'
-	FileUtils::mkdir_p app_name + '/appserver/templates'
-		f = File.open(app_name + "/appserver/templates/redirect.tmpl", "w")
-		f.write("<%
-import cherrypy, re
-from lib.i18n import current_lang
-root_endpoint = cherrypy.request.config.get('root_endpoint')
-root = (root_endpoint or '') + '/'
-# Remove duplicate slashes at beginning/end of root_endpoint
-root = re.sub(r'(/)\\1+$', r'\\1', re.sub(r'^(/)\\1+', r'\\1', root))
-locale = \"-\".join([ x.lower() for x in current_lang()[0:2] if x is not None ])
-%>
-<!DOCTYPE html>
-<script type=\"text/javascript\">
+FileUtils::mkdir_p app_name + '/appserver/templates'
+f = File.open(app_name + "/appserver/templates/redirect.tmpl", "w")
+f.write("<%
+    import cherrypy, re
+    from lib.i18n import current_lang
+    root_endpoint = cherrypy.request.config.get('root_endpoint')
+    root = (root_endpoint or '') + '/'
+    # Remove duplicate slashes at beginning/end of root_endpoint
+    root = re.sub(r'(/)\\1+$', r'\\1', re.sub(r'^(/)\\1+', r'\\1', root))
+    locale = \"-\".join([ x.lower() for x in current_lang()[0:2] if x is not None ])
+    %>
+    <!DOCTYPE html>
+    <script type=\"text/javascript\">
     document.location = \"${root}dj/${locale}/${APP['id']}\"
-</script>")
-		f.close
+    </script>")
+f.close
 
 FileUtils::mkdir_p app_name + '/bin'
-	f = File.open(app_name + "/bin/README", "w")
-	f.write("Put search commands, scripted inputs and scripted lookups here...
-")
-	f.close
+f = File.open(app_name + "/bin/README", "w")
+f.write("Put search commands, scripted inputs and scripted lookups here...
+    ")
+f.close
 
 FileUtils::mkdir_p app_name + '/default'
-	f = File.open(app_name + "/default/app.conf", "w")
-	f.write("#
-# Splunk app configuration file
-#
+f = File.open(app_name + "/default/app.conf", "w")
+f.write("#
+    # Splunk app configuration file
+    #
 
-[install]
-is_configured = 0
+    [install]
+    is_configured = 0
 
-[package]
-id = " + app_name + "
+    [package]
+    id = " + app_name + "
 
-[ui]
-is_visible = True
-label = " + app_name + "
+    [ui]
+    is_visible = True
+    label = " + app_name + "
 
-[launcher]
-author = 
-description = 
-version = 1.0
-")
-	f.close
+    [launcher]
+    author = 
+    description = 
+    version = 1.0
+    ")
+f.close
 
-	FileUtils::mkdir_p app_name + '/default/data'
-		FileUtils::mkdir_p app_name + '/default/data/ui'
-			FileUtils::mkdir_p app_name + '/default/data/ui/nav'
-				f = File.open(app_name + "/default/data/ui/nav/default.xml", "w")
-				f.write("<nav>
+FileUtils::mkdir_p app_name + '/default/data'
+FileUtils::mkdir_p app_name + '/default/data/ui'
+FileUtils::mkdir_p app_name + '/default/data/ui/nav'
+f = File.open(app_name + "/default/data/ui/nav/default.xml", "w")
+f.write("<nav>
     <view name=\"default\" default=\"true\"/>
     <a href=\"/dj/redirector/" + app_name + "/home\">Home</a>
-</nav>")
-				f.close
+    </nav>")
+f.close
 
-			FileUtils::mkdir_p app_name + '/default/data/ui/views'
-				f = File.open(app_name + "/default/data/ui/views/default.xml", "w")
-				f.write("<view template=\"" + app_name + ":/templates/redirect.tmpl\" isVisible=\"false\"><label>Home</label></view>")
-				f.close
+FileUtils::mkdir_p app_name + '/default/data/ui/views'
+f = File.open(app_name + "/default/data/ui/views/default.xml", "w")
+f.write("<view template=\"" + app_name + ":/templates/redirect.tmpl\" isVisible=\"false\"><label>Home</label></view>")
+f.close
 
 FileUtils::mkdir_p app_name + '/django'
-	FileUtils::mkdir_p app_name + '/django/' + app_name
-		f = File.open(app_name + "/django/" + app_name + "/__init__.py", "w")
-		f.write("# Copyright 2015
-")
-		f.close
+FileUtils::mkdir_p app_name + '/django/' + app_name
+f = File.open(app_name + "/django/" + app_name + "/__init__.py", "w")
+f.write("# Copyright 2015
+    ")
+f.close
 
-		f = File.open(app_name + "/django/" + app_name + "/tests.py", "w")
-		f.write("\"\"\"
-This file demonstrates writing tests using the unittest module. These will pass
+f = File.open(app_name + "/django/" + app_name + "/tests.py", "w")
+f.write("\"\"\"
+    This file demonstrates writing tests using the unittest module. These will pass
 when you run \"manage.py test\".
 
-Replace this with more appropriate tests for your application.
-\"\"\"
+    Replace this with more appropriate tests for your application.
+    \"\"\"
 
-from django.test import TestCase
+    from django.test import TestCase
 
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        \"\"\"
-        Tests that 1 + 1 always equals 2.
-        \"\"\"
-        self.assertEqual(1 + 1, 2)
+    class SimpleTest(TestCase):
+        def test_basic_addition(self):
+            \"\"\"
+            Tests that 1 + 1 always equals 2.
+            \"\"\"
+            self.assertEqual(1 + 1, 2)
+            ")
+f.close
+
+f = File.open(app_name + "/django/" + app_name + "/urls.py", "w")
+f.write("from django.conf.urls import patterns, include, url
+    from splunkdj.utility.views import render_template as render
+
+    urlpatterns = patterns('',
+        url(r'^home/$', '" + app_name + ".views.home', name='home'), 
+        )
 ")
-		f.close
+f.close
 
-		f = File.open(app_name + "/django/" + app_name + "/urls.py", "w")
-		f.write("from django.conf.urls import patterns, include, url
-from splunkdj.utility.views import render_template as render
+f = File.open(app_name + "/django/" + app_name + "/views.py", "w")
+f.write("from django.contrib.auth.decorators import login_required
+    from splunkdj.decorators.render import render_to
 
-urlpatterns = patterns('',
-    url(r'^home/$', '" + app_name + ".views.home', name='home'), 
-)
-")
-		f.close
+    @render_to('" + app_name + ":home.html')
+    @login_required
+    def home(request):
+        return {
+            \"message\": \"Hello World from " + app_name + "!\",
+            \"" + app_name + "\": \"" + app_name + "\"
+            }")
+f.close
 
-		f = File.open(app_name + "/django/" + app_name + "/views.py", "w")
-		f.write("from django.contrib.auth.decorators import login_required
-from splunkdj.decorators.render import render_to
-
-@render_to('" + app_name + ":home.html')
-@login_required
-def home(request):
-    return {
-        \"message\": \"Hello World from " + app_name + "!\",
-        \"" + app_name + "\": \"" + app_name + "\"
-    }")
-		f.close
-
-		FileUtils::mkdir_p app_name + '/django/' + app_name + '/static'
-			FileUtils::mkdir_p app_name + '/django/' + app_name + '/static/' + app_name
-				f = File.open(app_name + "/django/" + app_name + "/static/" + app_name + "/custom.css", "w")
-				f.write(".main-area {
+FileUtils::mkdir_p app_name + '/django/' + app_name + '/static'
+FileUtils::mkdir_p app_name + '/django/' + app_name + '/static/' + app_name
+f = File.open(app_name + "/django/" + app_name + "/static/" + app_name + "/custom.css", "w")
+f.write(".main-area {
 	border: solid;
 	border-width: 1px;
 	margin: 0px auto;
@@ -128,11 +128,11 @@ def home(request):
 	padding: 30px;
 	width: 1100px;
 	background-color: white;
-}")
-				f.close
+    }")
+f.close
 
-				f = File.open(app_name + "/django/" + app_name + "/static/" + app_name + "/custom.js", "w")
-				f.write("var urlprefix = document.URL.substr(0, document.URL.search(\"/dj\"));
+f = File.open(app_name + "/django/" + app_name + "/static/" + app_name + "/custom.js", "w")
+f.write("var urlprefix = document.URL.substr(0, document.URL.search(\"/dj\"));
 
 require.config({
     baseUrl: urlprefix + \"/static/js\",
@@ -223,7 +223,7 @@ require([
         // 
         // TOKENS
         //
-        
+
         // Create token namespaces
         var urlTokenModel = new UrlTokenModel();
         mvc.Components.registerInstance('url', urlTokenModel);
@@ -259,40 +259,72 @@ require([
         //
         // SEARCH MANAGERS
         //
-		")
-				for i in 0..data.length - 8
-                    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
-                    if charttype.include? 'text'
+        ")
+for i in 0..data.length - 8
+    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
+    if data[i].include? "ColorScheme:"
+        panelname = data[i].scan(/PanelName: "(.*)" ColorScheme:/)[0][0]
+    else
+        panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
+    end
+    if charttype.include? 'text'
 
-                    elsif charttype.include? 'radio'
+    elsif charttype.include? 'radio'
 
-                    elsif charttype.include? 'dropdown'
+    elsif charttype.include? 'dropdown'
 
-                    elsif charttype.include? 'checkboxgroup'
+    elsif charttype.include? 'checkboxgroup'
 
-                    elsif charttype.include? 'multiselect'
+    elsif charttype.include? 'multiselect'
 
-                    elsif charttype.include? 'timerangepicker'
+    elsif charttype.include? 'timerangepicker'
 
-                    else
-					   search = data[i].scan(/Search: "(.*)" ChartType:/)[0][0]
-					   f.write("var search#{i} = new SearchManager({
-             \"id\": \"search#{i}\",
-             \"search\": \"#{search}\",
-             \"latest_time\": \"\",
-             \"cancelOnUnload\": true,
-             \"status_buckets\": 0,
-             \"earliest_time\": \"\",
-             \"app\": utils.getCurrentApp(),
-             \"auto_cancel\": 90,
-             \"preview\": true,
-             \"runWhenTimeIsUndefined\": false
-         }, {tokens: true, tokenNamespace: \"submitted\"});
-		")
-                    end
-				end
+    else
+        hasTime = false
+        for j in 0..data.length - 8
+            ctype = data[j].scan(/ChartType: "(.*)" RowType:/)[0][0]
+            if ctype.include? 'timerangepicker'
+                pname = data[j].scan(/Search: "(.*)" ChartType:/)[0][0]
+                if pname == panelname
+                    hasTime = true
+                    timeselect = j
+                end
+            end
+        end
+        search = data[i].scan(/Search: "(.*)" ChartType:/)[0][0]
+        if hasTime
+            f.write("var search#{i} = new SearchManager({
+            \"id\": \"search#{i}\",
+            \"search\": \"#{search}\",
+            \"latest_time\": \"$field#{timeselect}.latest$\",
+            \"cancelOnUnload\": true,
+            \"status_buckets\": 0,
+            \"earliest_time\": \"$field#{timeselect}.earliest$\",
+            \"app\": utils.getCurrentApp(),
+            \"auto_cancel\": 90,
+            \"preview\": true,
+            \"runWhenTimeIsUndefined\": false
+        }, {tokens: true, tokenNamespace: \"submitted\"});
+        ")
+        else
+            f.write("var search#{i} = new SearchManager({
+            \"id\": \"search#{i}\",
+            \"search\": \"#{search}\",
+            \"latest_time\": \"\",
+            \"cancelOnUnload\": true,
+            \"status_buckets\": 0,
+            \"earliest_time\": \"\",
+            \"app\": utils.getCurrentApp(),
+            \"auto_cancel\": 90,
+            \"preview\": true,
+            \"runWhenTimeIsUndefined\": false
+        }, {tokens: true, tokenNamespace: \"submitted\"});
+        ")
+        end
+    end
+end
 
-				f.write("
+f.write("
         //
         // SPLUNK HEADER AND FOOTER
         //
@@ -318,29 +350,29 @@ require([
         //
         // VIEWS: VISUALIZATION ELEMENTS
         //
-		")
-				for i in 0..data.length - 8
-					charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
-                    if data[i].include? "ColorScheme:"
-                        colorscheme = data[i].scan(/ColorScheme: "(.*)"/)[0][0]
-                        colorscheme = colorscheme.gsub('#', '0x')
-                    end
-                    if charttype.include? 'text'
+        ")
+for i in 0..data.length - 8
+ charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
+ if data[i].include? "ColorScheme:"
+    colorscheme = data[i].scan(/ColorScheme: "(.*)"/)[0][0]
+    colorscheme = colorscheme.gsub('#', '0x')
+end
+if charttype.include? 'text'
 
-                    elsif charttype.include? 'radio'
-                            
-                    elsif charttype.include? 'dropdown'
-                    
-                    elsif charttype.include? 'checkboxgroup'
-                    
-                    elsif charttype.include? 'multiselect'
+elsif charttype.include? 'radio'
 
-                    elsif charttype.include? 'timerangepicker'
-                                
-                    elsif charttype.include? "event"
+elsif charttype.include? 'dropdown'
 
-                    elsif charttype.include? "table"
-                        f.write("var element#{i} = new TableElement({
+elsif charttype.include? 'checkboxgroup'
+
+elsif charttype.include? 'multiselect'
+
+elsif charttype.include? 'timerangepicker'
+
+elsif charttype.include? "event"
+
+elsif charttype.include? "table"
+    f.write("var element#{i} = new TableElement({
             \"id\": \"element#{i}\",
             \"count\": 10,
             \"dataOverlayMode\": \"none\",
@@ -349,50 +381,56 @@ require([
             \"wrap\": \"true\",
             \"managerid\": \"search#{i}\",
             \"el\": $('#element#{i}')
-        }, {tokens: true, tokenNamespace: \"submitted\"}).render();")
-                    elsif charttype.include? "single"
-                        f.write("var element#{i} = new SingleElement({
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+        ")
+elsif charttype.include? "single"
+    f.write("var element#{i} = new SingleElement({
             \"id\": \"element#{i}\",
             \"linkView\": \"search\",
             \"drilldown\": \"none\",
             \"managerid\": \"search#{i}\",
             \"el\": $('#element#{i}')
-        }, {tokens: true, tokenNamespace: \"submitted\"}).render();")
-                    elsif charttype.include? "map"
-                        f.write("var element#{i} = new MapElement({
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+        ")
+elsif charttype.include? "map"
+    f.write("var element#{i} = new MapElement({
             \"id\": \"element#{i}\",
             \"resizable\": true,
             \"managerid\": \"search#{i}\",
             \"el\": $('#element#{i}')
-        }, {tokens: true, tokenNamespace: \"submitted\"}).render();")
-                    else        
-					   f.write("var element#{i} = new ChartElement({
-             \"id\": \"element#{i}\",
-             \"charting.chart\": \"#{charttype}\",")
-                       if data[i].include? "ColorScheme:"
-                        f.write("
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+        ")
+else        
+    f.write("var element#{i} = new ChartElement({
+            \"id\": \"element#{i}\",
+            \"charting.chart\": \"#{charttype}\",")
+        if data[i].include? "ColorScheme:"
+            f.write("
             \"charting.seriesColors\": \"" + colorscheme + "\",")
-                       end
-                       f.write("
-             \"resizable\": false,
-             \"managerid\": \"search#{i}\",
-             \"el\": $('#element#{i}')
-         }, {tokens: true, tokenNamespace: \"submitted\"}).render();
-		")
-                    end
-				end
-				
-				f.write("
+        end
+    f.write("
+            \"resizable\": false,
+            \"managerid\": \"search#{i}\",
+            \"el\": $('#element#{i}')
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+        ")
+end
+end
+
+f.write("
         //
         // VIEWS: FORM INPUTS
-        //")
+        //
+        ")
 
-                for i in 0..data.length - 8
-                    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
-                    inputvalue = data[i].scan(/Search: "(.*)" ChartType:/)
-                    inputvalue = inputvalue.gsub('$', '')
-                    if charttype.include? 'text'
-                        f.write("var input#{i} = new TextInput({
+for i in 0..data.length - 8
+    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
+    inputvalue = data[i].scan(/Search: "(.*)" ChartType:/)
+    if inputvalue.include? '$'
+        inputvalue = inputvalue.gsub('$', '')
+    end
+    if charttype.include? 'text'
+        f.write("var input#{i} = new TextInput({
             \"id\": \"input#{i}\",
             \"default\": \"\",
             \"value\": \"$form.#{inputvalue}$\",
@@ -401,10 +439,11 @@ require([
 
         input#{i}.on(\"change\", function(newValue) {
             FormUtils.handleValueChange(input#{i});
-        });")
-                    elsif charttype.include? 'radio'
-                        choices = data[i].scan(/Choices: "(.*)"/)
-                        f.write("var input#{i} = new RadioGroupInput({
+        });
+        ")
+    elsif charttype.include? 'radio'
+        choices = data[i].scan(/Choices: "(.*)"/)
+        f.write("var input#{i} = new RadioGroupInput({
             \"id\": \"input#{i}\",
             \"choices\": #{choices},
             \"selectFirstChoice\": false,
@@ -416,10 +455,11 @@ require([
 
         input#{i}.on(\"change\", function(newValue) {
             FormUtils.handleValueChange(input#{i});
-        });")
-                    elsif charttype.include? 'dropdown'
-                        choices = data[i].scan(/Choices: "(.*)"/)
-                        f.write("var input#{i} = new DropdownInput({
+        });
+        ")
+    elsif charttype.include? 'dropdown'
+        choices = data[i].scan(/Choices: "(.*)"/)
+        f.write("var input#{i} = new DropdownInput({
             \"id\": \"input#{i}\",
             \"choices\": #{choices},
             \"selectFirstChoice\": false,
@@ -431,10 +471,11 @@ require([
 
         input#{i}.on(\"change\", function(newValue) {
             FormUtils.handleValueChange(input#{i});
-        });")
-                    elsif charttype.include? 'checkboxgroup'
-                        choices = data[i].scan(/Choices: "(.*)"/)
-                        f.write("var input#{i} = new CheckboxGroupInput({
+        });
+        ")
+    elsif charttype.include? 'checkboxgroup'
+        choices = data[i].scan(/Choices: "(.*)"/)
+        f.write("var input#{i} = new CheckboxGroupInput({
             \"id\": \"input#{i}\",
             \"choices\": #{choices},
             \"delimiter\": \"AND\",
@@ -445,10 +486,11 @@ require([
 
         input#{i}.on(\"change\", function(newValue) {
             FormUtils.handleValueChange(input#{i});
-        });")
-                    elsif charttype.include? 'multiselect'
-                        choices = data[i].scan(/Choices: "(.*)"/)
-                        f.write("var input#{i} = new MultiSelectInput({
+        });
+        ")
+    elsif charttype.include? 'multiselect'
+        choices = data[i].scan(/Choices: "(.*)"/)
+        f.write("var input#{i} = new MultiSelectInput({
             \"id\": \"input#{i}\",
             \"choices\": #{choices},
             \"delimiter\": \"AND\",
@@ -459,9 +501,10 @@ require([
 
         input#{i}.on(\"change\", function(newValue) {
             FormUtils.handleValueChange(input#{i});
-        });")
-                    elsif charttype.include? 'timerangepicker'
-                        f.write("var input#{i} = new TimeRangeInput({
+        });
+        ")
+    elsif charttype.include? 'timerangepicker'
+        f.write("var input#{i} = new TimeRangeInput({
             \"id\": \"input#{i}\",
             \"default\": {\"latest_time\": null, \"earliest_time\": \"0\"},
             \"searchWhenChanged\": true,
@@ -472,13 +515,14 @@ require([
 
         input#{i}.on(\"change\", function(newValue) {
             FormUtils.handleValueChange(input#{i});
-        });")
-                    else
-                        
-                    end
-                end
+        });
+        ")
+    else
 
-                f.write("
+    end
+end
+
+f.write("
 
         // This section is only included for forms
         // Initialize time tokens to default
@@ -498,11 +542,11 @@ require([
 
     }
 );")
-				f.close
+f.close
 
-		FileUtils::mkdir_p app_name + '/django/' + app_name + '/templates'
-			f = File.open(app_name + "/django/" + app_name + "/templates/home.html", "w")
-			f.write("<!DOCTYPE html>
+FileUtils::mkdir_p app_name + '/django/' + app_name + '/templates'
+f = File.open(app_name + "/django/" + app_name + "/templates/home.html", "w")
+f.write("<!DOCTYPE html>
 <html lang=\"en\">
 <head>
     <meta charset=\"utf-8\" />
@@ -536,131 +580,153 @@ styles in <div> tags, similar to Bootstrap's grid system.
     <div id=\"placeholder-app-bar\"></div>
 </div>
 <a id=\"navSkip\"></a>
-    <div>
-        <div class=\"main-area\">
-        	")
+<div>
+    <div class=\"main-area\">
+        ")
 
-			for i in 0..data.length - 8
-				charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
-				rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0].to_s
-				panelname = data[i].scan(/PanelName: "(.*)" ColorScheme:/)[0][0]
-                if charttype.include? 'text'
-                    isForm = true
-                elsif charttype.include? 'radio'
-                    isForm = true
-                elsif charttype.include? 'dropdown'
-                    isForm = true
-                elsif charttype.include? 'checkboxgroup'
-                    isForm = true
-                elsif charttype.include? 'multiselect'
-                    isForm = true
-                elsif charttype.include? 'timerangepicker'
-                    isForm = true
-                elsif charttype.include? "event"
-                    isForm = false
-                elsif charttype.include? "table"
-                    isForm = false
-                elsif charttype.include? "single"
-                    isForm = false
-                elsif charttype.include? "map"
-                    isForm = false
-                else
-                    isForm = false
-                    charttype = "chart"
-                end
-                        
-				if rowtype.include? "Double"
-					if tablecount == 0
-						f.write("<table width=\"100%\">
-			<tr>
-			<td width=\"50%\">
-			")
-					end
-				elsif rowtype.include? "Triple"
-					if tablecount == 0
-						f.write("<table width=\"100%\">
-			<tr>
-			<td width=\"33%\">
-			")
-					end
-				end
-                if isForm
-                    f.write("<div class=\"input input-#{charttype}\" id=\"input#{i}\">
+for i in 0..data.length - 8
+    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
+    rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0].to_s
+    if data[i].include? 'ColorScheme:'
+        panelname = data[i].scan(/PanelName: "(.*)" ColorScheme:/)[0][0]
+    else
+        panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
+    end
+    if charttype.include? 'text'
+        isForm = true
+    elsif charttype.include? 'radio'
+        isForm = true
+    elsif charttype.include? 'dropdown'
+        isForm = true
+    elsif charttype.include? 'checkboxgroup'
+        isForm = true
+    elsif charttype.include? 'multiselect'
+        isForm = true
+    elsif charttype.include? 'timerangepicker'
+        isForm = true
+    elsif charttype.include? "event"
+        isForm = false
+    elsif charttype.include? "table"
+        isForm = false
+    elsif charttype.include? "single"
+        isForm = false
+    elsif charttype.include? "map"
+        isForm = false
+    else
+        isForm = false
+        charttype = "chart"
+    end
+
+    if rowtype.include? "Double"
+     if tablecount == 0
+      f.write("<table width=\"100%\">
+            <tr>
+                <td width=\"50%\">
+                    ")
+  end
+elsif rowtype.include? "Triple"
+ if tablecount == 0
+  f.write("<table width=\"100%\">
+            <tr>
+                <td width=\"33%\">
+                    ")
+end
+end
+if isForm
+    if (rowtype.include? "Triple" or rowtype.include? "Double")
+        f.write("<div class=\"input input-#{charttype}\" id=\"input#{i}\">
+                        <label>#{panelname}</label>
+                    </div>
+                ")
+    else
+        f.write("<div class=\"input input-#{charttype}\" id=\"input#{i}\">
             <label>#{panelname}</label>
-        </div>")
-                elsif !isForm
-				    f.write("<div class=\"panel-element-row\">
-			    <div id=\"element#{i}\" class=\"dashboard-element #{charttype}\">
-			        <div class=\"panel-head\">
-			            <h3>#{panelname}</h3>
-			        </div>
-		        </div>
-		    </div>
-		    <br>
-		    ")
-                end
-				if rowtype.include? "Double"
-					if tablecount == 0
-						f.write("</td>
-			<td>
-			")
-						tablecount += 1
-					elsif tablecount == 1
-						f.write("</td>
-			</tr>
-			</table>
-			")
-						tablecount = 0
-					end
-				elsif rowtype.include? "Triple"
-					if tablecount <= 1
-						f.write("</td>
-			<td width=\"33%\">
-			")
-						tablecount += 1
-					elsif tablecount == 2
-						f.write("</td>
-			</tr>
-			</table>
-			")
-						tablecount = 0
-					end	
-				end
-			end
+        </div>
+        ")
+    end
+elsif !isForm
+    if (rowtype.include? "Triple" or rowtype.include? "Double")
+        f.write("<div class=\"panel-element-row\">
+                        <div id=\"element#{i}\" class=\"dashboard-element #{charttype}\">
+                            <div class=\"panel-head\">
+                                <h3>#{panelname}</h3>
+                            </div>
+                        </div>
+                    </div>
+                ")
+    else
+        f.write("<div class=\"panel-element-row\">
+            <div id=\"element#{i}\" class=\"dashboard-element #{charttype}\">
+                <div class=\"panel-head\">
+                    <h3>#{panelname}</h3>
+                </div>
+            </div>
+        </div>
+        <br>
+        ")
+    end
+end
+if rowtype.include? "Double"
+ if tablecount == 0
+  f.write("</td>
+                <td>
+                    ")
+  tablecount += 1
+elsif tablecount == 1
+  f.write("</td>
+            </tr>
+        </table>
+        ")
+  tablecount = 0
+end
+elsif rowtype.include? "Triple"
+ if tablecount <= 1
+  f.write("</td>
+                <td width=\"33%\">
+                    ")
+  tablecount += 1
+elsif tablecount == 2
+  f.write("</td>
+            </tr>
+        </table>
+    ")
+  tablecount = 0
+end	
+end
+end
 
-             f.write("
-         </div>
-     </div>
- <div class=\"footer\"></div>
+f.write("
+    </div>
+</div>
+<div class=\"footer\"></div>
+</body>
+</html>")
+f.close
 
- </body>
- </html>")
-			f.close
-
-		FileUtils::mkdir_p app_name + '/django/' + app_name + '/templatetags'
-			f = File.open(app_name + "/django/" + app_name + "/templatetags/__init__.py", "w")
-			f.write("")
-			f.close
+FileUtils::mkdir_p app_name + '/django/' + app_name + '/templatetags'
+f = File.open(app_name + "/django/" + app_name + "/templatetags/__init__.py", "w")
+f.write("")
+f.close
 
 f = File.open(app_name + "/README", "w")
 f.write("Introduction
-------------
-Describe your application here.
+    ------------
+    Describe your application here.
 
-Installation
-------------
-Describe how to install your application here (if applicable).
+    Installation
+    ------------
+    Describe how to install your application here (if applicable).
 
-Usage
------
-Describe how to use your application here.
+    Usage
+    -----
+    Describe how to use your application here.
 
-TODO:
------
-If you intend to upload this application to Splunk Apps, we strongly recommend 
-that you update the app.conf file (located in your app's /default directory) 
-with your name, a one-sentence description of your application, and the
-version number of your application.")
+    TODO:
+    -----
+    If you intend to upload this application to Splunk Apps, we strongly recommend 
+    that you update the app.conf file (located in your app's /default directory) 
+    with your name, a one-sentence description of your application, and the
+    version number of your application.")
 f.close
 
 FileUtils::mkdir_p app_name + '/lookups'
