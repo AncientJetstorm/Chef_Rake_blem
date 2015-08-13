@@ -267,17 +267,7 @@ for i in 0..data.length - 8
     else
         panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
     end
-    if charttype.include? 'text'
-
-    elsif charttype.include? 'radio'
-
-    elsif charttype.include? 'dropdown'
-
-    elsif charttype.include? 'checkboxgroup'
-
-    elsif charttype.include? 'multiselect'
-
-    elsif charttype.include? 'timerangepicker'
+    if (charttype.include? 'text' or charttype.include? 'radio' or charttype.include? 'dropdown' or charttype.include? 'checkboxgroup' or charttype.include? 'multiselect' or charttype.include? 'timerangepicker')
 
     else
         hasTime = false
@@ -352,69 +342,72 @@ f.write("
         //
         ")
 for i in 0..data.length - 8
- charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
- if data[i].include? "ColorScheme:"
-    colorscheme = data[i].scan(/ColorScheme: "(.*)"/)[0][0]
-    colorscheme = colorscheme.gsub('#', '0x')
-end
-if charttype.include? 'text'
+    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
+    if data[i].include? "ColorScheme:"
+        colorscheme = data[i].scan(/ColorScheme: "(.*)"/)[0][0]
+        colorscheme = colorscheme.gsub('#', '0x')
+    end
+    if (charttype.include? 'text' or charttype.include? 'radio' or charttype.include? 'dropdown' or charttype.include? 'checkboxgroup' or charttype.include? 'multiselect' or charttype.include? 'timerangepicker')
 
-elsif charttype.include? 'radio'
-
-elsif charttype.include? 'dropdown'
-
-elsif charttype.include? 'checkboxgroup'
-
-elsif charttype.include? 'multiselect'
-
-elsif charttype.include? 'timerangepicker'
-
-elsif charttype.include? "event"
-
-elsif charttype.include? "table"
-    f.write("var element#{i} = new TableElement({
+    elsif charttype.include? "event"
+        f.write("var element#{i} = new EventElement({
             \"id\": \"element#{i}\",
+            \"type\": \"list\",
+            \"table.wrap\": \"1\",
+            \"list.drilldown\": \"full\",
             \"count\": 10,
-            \"dataOverlayMode\": \"none\",
-            \"drilldown\": \"cell\",
-            \"rowNumbers\": \"false\",
-            \"wrap\": \"true\",
+            \"raw.drilldown\": \"full\",
+            \"rowNumbers\": \"0\",
+            \"table.drilldown\": \"all\",
+            \"maxLines\": 5,
+            \"list.wrap\": \"1\",
             \"managerid\": \"search#{i}\",
             \"el\": $('#element#{i}')
-        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
-        ")
-elsif charttype.include? "single"
-    f.write("var element#{i} = new SingleElement({
-            \"id\": \"element#{i}\",
-            \"linkView\": \"search\",
-            \"drilldown\": \"none\",
-            \"managerid\": \"search#{i}\",
-            \"el\": $('#element#{i}')
-        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
-        ")
-elsif charttype.include? "map"
-    f.write("var element#{i} = new MapElement({
-            \"id\": \"element#{i}\",
-            \"resizable\": true,
-            \"managerid\": \"search#{i}\",
-            \"el\": $('#element#{i}')
-        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
-        ")
-else        
-    f.write("var element#{i} = new ChartElement({
-            \"id\": \"element#{i}\",
-            \"charting.chart\": \"#{charttype}\",")
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();")
+    elsif charttype.include? "table"
+        f.write("var element#{i} = new TableElement({
+                \"id\": \"element#{i}\",
+                \"count\": 10,
+                \"dataOverlayMode\": \"none\",
+                \"drilldown\": \"cell\",
+                \"rowNumbers\": \"false\",
+                \"wrap\": \"true\",
+                \"managerid\": \"search#{i}\",
+                \"el\": $('#element#{i}')
+            }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+            ")
+    elsif charttype.include? "single"
+        f.write("var element#{i} = new SingleElement({
+                \"id\": \"element#{i}\",
+                \"linkView\": \"search\",
+                \"drilldown\": \"none\",
+                \"managerid\": \"search#{i}\",
+                \"el\": $('#element#{i}')
+            }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+            ")
+    elsif charttype.include? "map"
+        f.write("var element#{i} = new MapElement({
+                \"id\": \"element#{i}\",
+                \"resizable\": true,
+                \"managerid\": \"search#{i}\",
+                \"el\": $('#element#{i}')
+            }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+            ")
+    else        
+        f.write("var element#{i} = new ChartElement({
+                \"id\": \"element#{i}\",
+                \"charting.chart\": \"#{charttype}\",")
         if data[i].include? "ColorScheme:"
             f.write("
-            \"charting.seriesColors\": \"" + colorscheme + "\",")
+                \"charting.seriesColors\": \"" + colorscheme + "\",")
         end
-    f.write("
-            \"resizable\": false,
-            \"managerid\": \"search#{i}\",
-            \"el\": $('#element#{i}')
-        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
-        ")
-end
+        f.write("
+                \"resizable\": false,
+                \"managerid\": \"search#{i}\",
+                \"el\": $('#element#{i}')
+            }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+            ")
+    end
 end
 
 f.write("
@@ -592,61 +585,45 @@ for i in 0..data.length - 8
     else
         panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
     end
-    if charttype.include? 'text'
+    if (charttype.include? 'text' or charttype.include? 'radio' or charttype.include? 'dropdown' or charttype.include? 'checkboxgroup' or charttype.include? 'multiselect' or charttype.include? 'timerangepicker')
         isForm = true
-    elsif charttype.include? 'radio'
-        isForm = true
-    elsif charttype.include? 'dropdown'
-        isForm = true
-    elsif charttype.include? 'checkboxgroup'
-        isForm = true
-    elsif charttype.include? 'multiselect'
-        isForm = true
-    elsif charttype.include? 'timerangepicker'
-        isForm = true
-    elsif charttype.include? "event"
-        isForm = false
-    elsif charttype.include? "table"
-        isForm = false
-    elsif charttype.include? "single"
-        isForm = false
-    elsif charttype.include? "map"
+    elsif (charttype.include? 'event' or charttype.include? 'table' or charttype.include? 'single' or charttype.include? 'map')
         isForm = false
     else
         isForm = false
-        charttype = "chart"
+        charttype = 'chart'
     end
 
     if rowtype.include? "Double"
-     if tablecount == 0
-      f.write("<table width=\"100%\">
+        if tablecount == 0
+            f.write("<table width=\"100%\">
             <tr>
                 <td width=\"50%\">
                     ")
-  end
-elsif rowtype.include? "Triple"
- if tablecount == 0
-  f.write("<table width=\"100%\">
+        end
+    elsif rowtype.include? "Triple"
+        if tablecount == 0
+            f.write("<table width=\"100%\">
             <tr>
                 <td width=\"33%\">
                     ")
-end
-end
-if isForm
-    if (rowtype.include? "Triple" or rowtype.include? "Double")
-        f.write("<div class=\"input input-#{charttype}\" id=\"input#{i}\">
+        end
+    end
+    if isForm
+        if (rowtype.include? "Triple" or rowtype.include? "Double")
+            f.write("<div class=\"input input-#{charttype}\" id=\"input#{i}\">
                         <label>#{panelname}</label>
                     </div>
                 ")
-    else
-        f.write("<div class=\"input input-#{charttype}\" id=\"input#{i}\">
+        else
+            f.write("<div class=\"input input-#{charttype}\" id=\"input#{i}\">
             <label>#{panelname}</label>
         </div>
         ")
-    end
-elsif !isForm
-    if (rowtype.include? "Triple" or rowtype.include? "Double")
-        f.write("<div class=\"panel-element-row\">
+        end
+    elsif !isForm
+        if (rowtype.include? "Triple" or rowtype.include? "Double")
+            f.write("<div class=\"panel-element-row\">
                         <div id=\"element#{i}\" class=\"dashboard-element #{charttype}\">
                             <div class=\"panel-head\">
                                 <h3>#{panelname}</h3>
@@ -654,8 +631,8 @@ elsif !isForm
                         </div>
                     </div>
                 ")
-    else
-        f.write("<div class=\"panel-element-row\">
+        else
+            f.write("<div class=\"panel-element-row\">
             <div id=\"element#{i}\" class=\"dashboard-element #{charttype}\">
                 <div class=\"panel-head\">
                     <h3>#{panelname}</h3>
@@ -664,35 +641,35 @@ elsif !isForm
         </div>
         <br>
         ")
+        end
     end
-end
-if rowtype.include? "Double"
- if tablecount == 0
-  f.write("</td>
+    if rowtype.include? "Double"
+        if tablecount == 0
+            f.write("</td>
                 <td>
                     ")
-  tablecount += 1
-elsif tablecount == 1
-  f.write("</td>
+            tablecount += 1
+        elsif tablecount == 1
+            f.write("</td>
             </tr>
         </table>
         ")
-  tablecount = 0
-end
-elsif rowtype.include? "Triple"
- if tablecount <= 1
-  f.write("</td>
+            tablecount = 0
+        end
+    elsif rowtype.include? "Triple"
+        if tablecount <= 1
+            f.write("</td>
                 <td width=\"33%\">
                     ")
-  tablecount += 1
-elsif tablecount == 2
-  f.write("</td>
+            tablecount += 1
+        elsif tablecount == 2
+            f.write("</td>
             </tr>
         </table>
     ")
-  tablecount = 0
-end	
-end
+            tablecount = 0
+        end
+    end
 end
 
 f.write("
@@ -710,23 +687,23 @@ f.close
 
 f = File.open(app_name + "/README", "w")
 f.write("Introduction
-    ------------
-    Describe your application here.
+------------
+Describe your application here.
 
-    Installation
-    ------------
-    Describe how to install your application here (if applicable).
+Installation
+------------
+Describe how to install your application here (if applicable).
 
-    Usage
-    -----
-    Describe how to use your application here.
+Usage
+-----
+Describe how to use your application here.
 
-    TODO:
-    -----
-    If you intend to upload this application to Splunk Apps, we strongly recommend 
-    that you update the app.conf file (located in your app's /default directory) 
-    with your name, a one-sentence description of your application, and the
-    version number of your application.")
+TODO:
+-----
+If you intend to upload this application to Splunk Apps, we strongly recommend 
+that you update the app.conf file (located in your app's /default directory) 
+with your name, a one-sentence description of your application, and the
+version number of your application.")
 f.close
 
 FileUtils::mkdir_p app_name + '/lookups'
