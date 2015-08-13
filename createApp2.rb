@@ -105,15 +105,15 @@ f.close
 
 f = File.open(app_name + '/django/' + app_name + '/views.py', 'w')
 f.write("from django.contrib.auth.decorators import login_required
-    from splunkdj.decorators.render import render_to
+from splunkdj.decorators.render import render_to
 
-    @render_to('" + app_name + ":home.html')
-    @login_required
-    def home(request):
-        return {
-            \"message\": \"Hello World from " + app_name + "!\",
-            \"" + app_name + "\": \"" + app_name + "\"
-            }")
+@render_to('" + app_name + ":home.html')
+@login_required
+def home(request):
+    return {
+        \"message\": \"Hello World from " + app_name + "!\",
+        \"" + app_name + "\": \"" + app_name + "\"
+    }")
 f.close
 
 FileUtils::mkdir_p app_name + '/django/' + app_name + '/static'
@@ -458,7 +458,7 @@ for i in 0..data.length - 8
             \"selectFirstChoice\": false,
             \"searchWhenChanged\": true,
             \"showClearButton\": true,
-            \"value\": \"$form.field_token$\",
+            \"value\": \"$form.#{inputvalue}$\",
             \"el\": $('#input#{i}')
         }, {tokens: true}).render();
 
@@ -555,7 +555,6 @@ f.write("<!DOCTYPE html>
     <script src=\"{{SPLUNKWEB_URL_PREFIX}}/static/js/build/simplexml.min/config.js\"></script>
     <link rel=\"stylesheet\" type=\"text/css\" href=\"{{STATIC_URL}}{{app_name}}/custom.css\" />
     <script src=\"{{STATIC_URL}}{{app_name}}/custom.js\"></script>
-    <script src=\"{{STATIC_URL}}{{app_name}}/override.js\"></script>
     <!--[if IE 7]><link rel=\"stylesheet\" href=\"{{SPLUNKWEB_URL_PREFIX}}/static/css/sprites-ie7.css\" /><![endif]-->
 </head>
 <body class=\"simplexml preload\">
