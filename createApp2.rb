@@ -1,12 +1,12 @@
 require 'fileutils'
 
-data = IO.readlines("config.txt")
+data = IO.readlines('config.txt')
 app_name = data[0].scan(/AppName: "(.*)" Search:/)[0][0]
 tablecount = 0
 
 FileUtils::mkdir_p app_name + '/appserver'
 FileUtils::mkdir_p app_name + '/appserver/templates'
-f = File.open(app_name + "/appserver/templates/redirect.tmpl", "w")
+f = File.open(app_name + '/appserver/templates/redirect.tmpl', 'w')
 f.write("<%
     import cherrypy, re
     from lib.i18n import current_lang
@@ -23,13 +23,13 @@ f.write("<%
 f.close
 
 FileUtils::mkdir_p app_name + '/bin'
-f = File.open(app_name + "/bin/README", "w")
+f = File.open(app_name + '/bin/README', 'w')
 f.write("Put search commands, scripted inputs and scripted lookups here...
     ")
 f.close
 
 FileUtils::mkdir_p app_name + '/default'
-f = File.open(app_name + "/default/app.conf", "w")
+f = File.open(app_name + '/default/app.conf', 'w')
 f.write("#
     # Splunk app configuration file
     #
@@ -54,7 +54,7 @@ f.close
 FileUtils::mkdir_p app_name + '/default/data'
 FileUtils::mkdir_p app_name + '/default/data/ui'
 FileUtils::mkdir_p app_name + '/default/data/ui/nav'
-f = File.open(app_name + "/default/data/ui/nav/default.xml", "w")
+f = File.open(app_name + '/default/data/ui/nav/default.xml', 'w')
 f.write("<nav>
     <view name=\"default\" default=\"true\"/>
     <a href=\"/dj/redirector/" + app_name + "/home\">Home</a>
@@ -62,18 +62,18 @@ f.write("<nav>
 f.close
 
 FileUtils::mkdir_p app_name + '/default/data/ui/views'
-f = File.open(app_name + "/default/data/ui/views/default.xml", "w")
+f = File.open(app_name + '/default/data/ui/views/default.xml', 'w')
 f.write("<view template=\"" + app_name + ":/templates/redirect.tmpl\" isVisible=\"false\"><label>Home</label></view>")
 f.close
 
 FileUtils::mkdir_p app_name + '/django'
 FileUtils::mkdir_p app_name + '/django/' + app_name
-f = File.open(app_name + "/django/" + app_name + "/__init__.py", "w")
+f = File.open(app_name + '/django/' + app_name + '/__init__.py', 'w')
 f.write("# Copyright 2015
     ")
 f.close
 
-f = File.open(app_name + "/django/" + app_name + "/tests.py", "w")
+f = File.open(app_name + '/django/' + app_name + '/tests.py', 'w')
 f.write("\"\"\"
     This file demonstrates writing tests using the unittest module. These will pass
 when you run \"manage.py test\".
@@ -93,7 +93,7 @@ when you run \"manage.py test\".
             ")
 f.close
 
-f = File.open(app_name + "/django/" + app_name + "/urls.py", "w")
+f = File.open(app_name + '/django/' + app_name + '/urls.py', 'w')
 f.write("from django.conf.urls import patterns, include, url
     from splunkdj.utility.views import render_template as render
 
@@ -103,7 +103,7 @@ f.write("from django.conf.urls import patterns, include, url
 ")
 f.close
 
-f = File.open(app_name + "/django/" + app_name + "/views.py", "w")
+f = File.open(app_name + '/django/' + app_name + '/views.py', 'w')
 f.write("from django.contrib.auth.decorators import login_required
     from splunkdj.decorators.render import render_to
 
@@ -118,7 +118,7 @@ f.close
 
 FileUtils::mkdir_p app_name + '/django/' + app_name + '/static'
 FileUtils::mkdir_p app_name + '/django/' + app_name + '/static/' + app_name
-f = File.open(app_name + "/django/" + app_name + "/static/" + app_name + "/custom.css", "w")
+f = File.open(app_name + '/django/' + app_name + '/static/' + app_name + '/custom.css', 'w')
 f.write(".main-area {
 	border: solid;
 	border-width: 1px;
@@ -131,7 +131,7 @@ f.write(".main-area {
     }")
 f.close
 
-f = File.open(app_name + "/django/" + app_name + "/static/" + app_name + "/custom.js", "w")
+f = File.open(app_name + '/django/' + app_name + '/static/' + app_name + '/custom.js', 'w')
 f.write("var urlprefix = document.URL.substr(0, document.URL.search(\"/dj\"));
 
 require.config({
@@ -262,18 +262,18 @@ require([
         ")
 for i in 0..data.length - 8
     charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
-    if data[i].include? "ColorScheme:"
+    if data[i].include? 'ColorScheme'
         panelname = data[i].scan(/PanelName: "(.*)" ColorScheme:/)[0][0]
     else
         panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
     end
-    if (charttype.include? 'text' or charttype.include? 'radio' or charttype.include? 'dropdown' or charttype.include? 'checkboxgroup' or charttype.include? 'multiselect' or charttype.include? 'timerangepicker')
+    if (charttype == 'text' or charttype == 'radio' or charttype == 'dropdown' or charttype == 'checkboxgroup' or charttype == 'multiselect' or charttype == 'timerangepicker')
 
     else
         hasTime = false
         for j in 0..data.length - 8
             ctype = data[j].scan(/ChartType: "(.*)" RowType:/)[0][0]
-            if ctype.include? 'timerangepicker'
+            if ctype == 'timerangepicker'
                 pname = data[j].scan(/Search: "(.*)" ChartType:/)[0][0]
                 if pname == panelname
                     hasTime = true
@@ -343,13 +343,13 @@ f.write("
         ")
 for i in 0..data.length - 8
     charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
-    if data[i].include? "ColorScheme:"
+    if data[i].include? 'ColorScheme'
         colorscheme = data[i].scan(/ColorScheme: "(.*)"/)[0][0]
         colorscheme = colorscheme.gsub('#', '0x')
     end
-    if (charttype.include? 'text' or charttype.include? 'radio' or charttype.include? 'dropdown' or charttype.include? 'checkboxgroup' or charttype.include? 'multiselect' or charttype.include? 'timerangepicker')
+    if (charttype == 'text' or charttype == 'radio' or charttype == 'dropdown' or charttype == 'checkboxgroup' or charttype == 'multiselect' or charttype == 'timerangepicker')
 
-    elsif charttype.include? "event"
+    elsif charttype == 'event'
         f.write("var element#{i} = new EventElement({
             \"id\": \"element#{i}\",
             \"type\": \"list\",
@@ -364,7 +364,7 @@ for i in 0..data.length - 8
             \"managerid\": \"search#{i}\",
             \"el\": $('#element#{i}')
         }, {tokens: true, tokenNamespace: \"submitted\"}).render();")
-    elsif charttype.include? "table"
+    elsif charttype == 'table'
         f.write("var element#{i} = new TableElement({
                 \"id\": \"element#{i}\",
                 \"count\": 10,
@@ -376,7 +376,7 @@ for i in 0..data.length - 8
                 \"el\": $('#element#{i}')
             }, {tokens: true, tokenNamespace: \"submitted\"}).render();
             ")
-    elsif charttype.include? "single"
+    elsif charttype == 'single'
         f.write("var element#{i} = new SingleElement({
                 \"id\": \"element#{i}\",
                 \"linkView\": \"search\",
@@ -385,7 +385,7 @@ for i in 0..data.length - 8
                 \"el\": $('#element#{i}')
             }, {tokens: true, tokenNamespace: \"submitted\"}).render();
             ")
-    elsif charttype.include? "map"
+    elsif charttype == 'map'
         f.write("var element#{i} = new MapElement({
                 \"id\": \"element#{i}\",
                 \"resizable\": true,
@@ -397,7 +397,7 @@ for i in 0..data.length - 8
         f.write("var element#{i} = new ChartElement({
                 \"id\": \"element#{i}\",
                 \"charting.chart\": \"#{charttype}\",")
-        if data[i].include? "ColorScheme:"
+        if data[i].include? 'ColorScheme'
             f.write("
                 \"charting.seriesColors\": \"" + colorscheme + "\",")
         end
@@ -419,10 +419,10 @@ f.write("
 for i in 0..data.length - 8
     charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
     inputvalue = data[i].scan(/Search: "(.*)" ChartType:/)
-    if inputvalue.include? '$'
+    if inputvalue == '$'
         inputvalue = inputvalue.gsub('$', '')
     end
-    if charttype.include? 'text'
+    if charttype == 'text'
         f.write("var input#{i} = new TextInput({
             \"id\": \"input#{i}\",
             \"default\": \"\",
@@ -434,7 +434,7 @@ for i in 0..data.length - 8
             FormUtils.handleValueChange(input#{i});
         });
         ")
-    elsif charttype.include? 'radio'
+    elsif charttype == 'radio'
         choices = data[i].scan(/Choices: "(.*)"/)
         f.write("var input#{i} = new RadioGroupInput({
             \"id\": \"input#{i}\",
@@ -450,7 +450,7 @@ for i in 0..data.length - 8
             FormUtils.handleValueChange(input#{i});
         });
         ")
-    elsif charttype.include? 'dropdown'
+    elsif charttype == 'dropdown'
         choices = data[i].scan(/Choices: "(.*)"/)
         f.write("var input#{i} = new DropdownInput({
             \"id\": \"input#{i}\",
@@ -466,7 +466,7 @@ for i in 0..data.length - 8
             FormUtils.handleValueChange(input#{i});
         });
         ")
-    elsif charttype.include? 'checkboxgroup'
+    elsif charttype == 'checkboxgroup'
         choices = data[i].scan(/Choices: "(.*)"/)
         f.write("var input#{i} = new CheckboxGroupInput({
             \"id\": \"input#{i}\",
@@ -481,7 +481,7 @@ for i in 0..data.length - 8
             FormUtils.handleValueChange(input#{i});
         });
         ")
-    elsif charttype.include? 'multiselect'
+    elsif charttype == 'multiselect'
         choices = data[i].scan(/Choices: "(.*)"/)
         f.write("var input#{i} = new MultiSelectInput({
             \"id\": \"input#{i}\",
@@ -496,7 +496,7 @@ for i in 0..data.length - 8
             FormUtils.handleValueChange(input#{i});
         });
         ")
-    elsif charttype.include? 'timerangepicker'
+    elsif charttype == 'timerangepicker'
         f.write("var input#{i} = new TimeRangeInput({
             \"id\": \"input#{i}\",
             \"default\": {\"latest_time\": null, \"earliest_time\": \"0\"},
@@ -538,7 +538,7 @@ f.write("
 f.close
 
 FileUtils::mkdir_p app_name + '/django/' + app_name + '/templates'
-f = File.open(app_name + "/django/" + app_name + "/templates/home.html", "w")
+f = File.open(app_name + '/django/' + app_name + '/templates/home.html', 'w')
 f.write("<!DOCTYPE html>
 <html lang=\"en\">
 <head>
@@ -580,28 +580,28 @@ styles in <div> tags, similar to Bootstrap's grid system.
 for i in 0..data.length - 8
     charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
     rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0].to_s
-    if data[i].include? 'ColorScheme:'
+    if data[i] == 'ColorScheme'
         panelname = data[i].scan(/PanelName: "(.*)" ColorScheme:/)[0][0]
     else
         panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
     end
-    if (charttype.include? 'text' or charttype.include? 'radio' or charttype.include? 'dropdown' or charttype.include? 'checkboxgroup' or charttype.include? 'multiselect' or charttype.include? 'timerangepicker')
+    if (charttype == 'text' or charttype == 'radio' or charttype == 'dropdown' or charttype == 'checkboxgroup' or charttype == 'multiselect' or charttype == 'timerangepicker')
         isForm = true
-    elsif (charttype.include? 'event' or charttype.include? 'table' or charttype.include? 'single' or charttype.include? 'map')
+    elsif (charttype == 'event' or charttype == 'table' or charttype == 'single' or charttype == 'map')
         isForm = false
     else
         isForm = false
         charttype = 'chart'
     end
 
-    if rowtype.include? "Double"
+    if rowtype == 'Double'
         if tablecount == 0
             f.write("<table width=\"100%\">
             <tr>
                 <td width=\"50%\">
                     ")
         end
-    elsif rowtype.include? "Triple"
+    elsif rowtype == 'Triple'
         if tablecount == 0
             f.write("<table width=\"100%\">
             <tr>
@@ -610,7 +610,7 @@ for i in 0..data.length - 8
         end
     end
     if isForm
-        if (rowtype.include? "Triple" or rowtype.include? "Double")
+        if (rowtype == 'Triple' or rowtype == 'Double')
             f.write("<div class=\"input input-#{charttype}\" id=\"input#{i}\">
                         <label>#{panelname}</label>
                     </div>
@@ -622,7 +622,7 @@ for i in 0..data.length - 8
         ")
         end
     elsif !isForm
-        if (rowtype.include? "Triple" or rowtype.include? "Double")
+        if (rowtype == 'Triple' or rowtype == 'Double')
             f.write("<div class=\"panel-element-row\">
                         <div id=\"element#{i}\" class=\"dashboard-element #{charttype}\">
                             <div class=\"panel-head\">
@@ -643,7 +643,7 @@ for i in 0..data.length - 8
         ")
         end
     end
-    if rowtype.include? "Double"
+    if rowtype == 'Double'
         if tablecount == 0
             f.write("</td>
                 <td>
@@ -656,7 +656,7 @@ for i in 0..data.length - 8
         ")
             tablecount = 0
         end
-    elsif rowtype.include? "Triple"
+    elsif rowtype == 'Triple'
         if tablecount <= 1
             f.write("</td>
                 <td width=\"33%\">
@@ -681,11 +681,11 @@ f.write("
 f.close
 
 FileUtils::mkdir_p app_name + '/django/' + app_name + '/templatetags'
-f = File.open(app_name + "/django/" + app_name + "/templatetags/__init__.py", "w")
+f = File.open(app_name + '/django/' + app_name + '/templatetags/__init__.py', 'w')
 f.write("")
 f.close
 
-f = File.open(app_name + "/README", "w")
+f = File.open(app_name + '/README', 'w')
 f.write("Introduction
 ------------
 Describe your application here.
