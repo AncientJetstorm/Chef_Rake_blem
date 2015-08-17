@@ -8,47 +8,47 @@ FileUtils::mkdir_p app_name + '/appserver'
 FileUtils::mkdir_p app_name + '/appserver/templates'
 f = File.open(app_name + '/appserver/templates/redirect.tmpl', 'w')
 f.write("<%
-    import cherrypy, re
-    from lib.i18n import current_lang
-    root_endpoint = cherrypy.request.config.get('root_endpoint')
-    root = (root_endpoint or '') + '/'
-    # Remove duplicate slashes at beginning/end of root_endpoint
-    root = re.sub(r'(/)\\1+$', r'\\1', re.sub(r'^(/)\\1+', r'\\1', root))
-    locale = \"-\".join([ x.lower() for x in current_lang()[0:2] if x is not None ])
-    %>
-    <!DOCTYPE html>
-    <script type=\"text/javascript\">
+import cherrypy, re
+from lib.i18n import current_lang
+root_endpoint = cherrypy.request.config.get('root_endpoint')
+root = (root_endpoint or '') + '/'
+# Remove duplicate slashes at beginning/end of root_endpoint
+root = re.sub(r'(/)\\1+$', r'\\1', re.sub(r'^(/)\\1+', r'\\1', root))
+locale = \"-\".join([ x.lower() for x in current_lang()[0:2] if x is not None ])
+%>
+<!DOCTYPE html>
+<script type=\"text/javascript\">
     document.location = \"${root}dj/${locale}/${APP['id']}\"
-    </script>")
+</script>")
 f.close
 
 FileUtils::mkdir_p app_name + '/bin'
 f = File.open(app_name + '/bin/README', 'w')
 f.write("Put search commands, scripted inputs and scripted lookups here...
-    ")
+")
 f.close
 
 FileUtils::mkdir_p app_name + '/default'
 f = File.open(app_name + '/default/app.conf', 'w')
 f.write("#
-    # Splunk app configuration file
-    #
+# Splunk app configuration file
+#
 
-    [install]
-    is_configured = 0
+[install]
+is_configured = 0
 
-    [package]
-    id = " + app_name + "
+[package]
+id = " + app_name + "
 
-    [ui]
-    is_visible = True
-    label = " + app_name + "
+[ui]
+is_visible = True
+label = " + app_name + "
 
-    [launcher]
-    author = 
-    description = 
-    version = 1.0
-    ")
+[launcher]
+author = 
+description = 
+version = 1.0
+")
 f.close
 
 FileUtils::mkdir_p app_name + '/default/data'
@@ -58,7 +58,7 @@ f = File.open(app_name + '/default/data/ui/nav/default.xml', 'w')
 f.write("<nav>
     <view name=\"default\" default=\"true\"/>
     <a href=\"/dj/redirector/" + app_name + "/home\">Home</a>
-    </nav>")
+</nav>")
 f.close
 
 FileUtils::mkdir_p app_name + '/default/data/ui/views'
@@ -69,37 +69,36 @@ f.close
 FileUtils::mkdir_p app_name + '/django'
 FileUtils::mkdir_p app_name + '/django/' + app_name
 f = File.open(app_name + '/django/' + app_name + '/__init__.py', 'w')
-f.write("# Copyright 2015
-    ")
+f.write("# Copyright 2015")
 f.close
 
 f = File.open(app_name + '/django/' + app_name + '/tests.py', 'w')
 f.write("\"\"\"
-    This file demonstrates writing tests using the unittest module. These will pass
+This file demonstrates writing tests using the unittest module. These will pass
 when you run \"manage.py test\".
 
-    Replace this with more appropriate tests for your application.
-    \"\"\"
+Replace this with more appropriate tests for your application.
+\"\"\"
 
-    from django.test import TestCase
+from django.test import TestCase
 
 
-    class SimpleTest(TestCase):
-        def test_basic_addition(self):
-            \"\"\"
-            Tests that 1 + 1 always equals 2.
-            \"\"\"
-            self.assertEqual(1 + 1, 2)
-            ")
+class SimpleTest(TestCase):
+    def test_basic_addition(self):
+        \"\"\"
+        Tests that 1 + 1 always equals 2.
+        \"\"\"
+        self.assertEqual(1 + 1, 2)
+        ")
 f.close
 
 f = File.open(app_name + '/django/' + app_name + '/urls.py', 'w')
 f.write("from django.conf.urls import patterns, include, url
-    from splunkdj.utility.views import render_template as render
+from splunkdj.utility.views import render_template as render
 
-    urlpatterns = patterns('',
-        url(r'^home/$', '" + app_name + ".views.home', name='home'), 
-        )
+urlpatterns = patterns('',
+    url(r'^home/$', '" + app_name + ".views.home', name='home'), 
+)
 ")
 f.close
 
@@ -128,7 +127,7 @@ f.write(".main-area {
 	padding: 30px;
 	width: 1100px;
 	background-color: white;
-    }")
+}")
 f.close
 
 f = File.open(app_name + '/django/' + app_name + '/static/' + app_name + '/custom.js', 'w')
@@ -294,7 +293,7 @@ for i in 0..data.length - 8
             \"auto_cancel\": 90,
             \"preview\": true,
             \"runWhenTimeIsUndefined\": false
-        }, {tokens: true, tokenNamespace: \"submitted\"});
+        }, {tokens: true});
         ")
         else
             f.write("var search#{i} = new SearchManager({
@@ -308,7 +307,7 @@ for i in 0..data.length - 8
             \"auto_cancel\": 90,
             \"preview\": true,
             \"runWhenTimeIsUndefined\": false
-        }, {tokens: true, tokenNamespace: \"submitted\"});
+        }, {tokens: true});
         ")
         end
     end
@@ -363,50 +362,51 @@ for i in 0..data.length - 8
             \"list.wrap\": \"1\",
             \"managerid\": \"search#{i}\",
             \"el\": $('#element#{i}')
-        }, {tokens: true, tokenNamespace: \"submitted\"}).render();")
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+        ")
     elsif charttype == 'table'
         f.write("var element#{i} = new TableElement({
-                \"id\": \"element#{i}\",
-                \"count\": 10,
-                \"dataOverlayMode\": \"none\",
-                \"drilldown\": \"cell\",
-                \"rowNumbers\": \"false\",
-                \"wrap\": \"true\",
-                \"managerid\": \"search#{i}\",
-                \"el\": $('#element#{i}')
-            }, {tokens: true, tokenNamespace: \"submitted\"}).render();
-            ")
+            \"id\": \"element#{i}\",
+            \"count\": 10,
+            \"dataOverlayMode\": \"none\",
+            \"drilldown\": \"cell\",
+            \"rowNumbers\": \"false\",
+            \"wrap\": \"true\",
+            \"managerid\": \"search#{i}\",
+            \"el\": $('#element#{i}')
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+        ")
     elsif charttype == 'single'
         f.write("var element#{i} = new SingleElement({
-                \"id\": \"element#{i}\",
-                \"linkView\": \"search\",
-                \"drilldown\": \"none\",
-                \"managerid\": \"search#{i}\",
-                \"el\": $('#element#{i}')
-            }, {tokens: true, tokenNamespace: \"submitted\"}).render();
-            ")
+            \"id\": \"element#{i}\",
+            \"linkView\": \"search\",
+            \"drilldown\": \"none\",
+            \"managerid\": \"search#{i}\",
+            \"el\": $('#element#{i}')
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+        ")
     elsif charttype == 'map'
         f.write("var element#{i} = new MapElement({
-                \"id\": \"element#{i}\",
-                \"resizable\": true,
-                \"managerid\": \"search#{i}\",
-                \"el\": $('#element#{i}')
-            }, {tokens: true, tokenNamespace: \"submitted\"}).render();
-            ")
+            \"id\": \"element#{i}\",
+            \"resizable\": true,
+            \"managerid\": \"search#{i}\",
+            \"el\": $('#element#{i}')
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+        ")
     else        
         f.write("var element#{i} = new ChartElement({
-                \"id\": \"element#{i}\",
-                \"charting.chart\": \"#{charttype}\",")
+            \"id\": \"element#{i}\",
+            \"charting.chart\": \"#{charttype}\",")
         if data[i].include? 'ColorScheme'
             f.write("
-                \"charting.seriesColors\": \"" + colorscheme + "\",")
+            \"charting.seriesColors\": \"" + colorscheme + "\",")
         end
         f.write("
-                \"resizable\": false,
-                \"managerid\": \"search#{i}\",
-                \"el\": $('#element#{i}')
-            }, {tokens: true, tokenNamespace: \"submitted\"}).render();
-            ")
+            \"resizable\": false,
+            \"managerid\": \"search#{i}\",
+            \"el\": $('#element#{i}')
+        }, {tokens: true, tokenNamespace: \"submitted\"}).render();
+        ")
     end
 end
 
@@ -418,7 +418,7 @@ f.write("
 
 for i in 0..data.length - 8
     charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
-    inputvalue = data[i].scan(/Search: "(.*)" ChartType:/)
+    inputvalue = data[i].scan(/Search: "(.*)" ChartType:/)[0][0]
     if inputvalue == '$'
         inputvalue = inputvalue.gsub('$', '')
     end
@@ -435,7 +435,7 @@ for i in 0..data.length - 8
         });
         ")
     elsif charttype == 'radio'
-        choices = data[i].scan(/Choices: "(.*)"/)
+        choices = data[i].scan(/Choices: "(.*)"/)[0][0]
         f.write("var input#{i} = new RadioGroupInput({
             \"id\": \"input#{i}\",
             \"choices\": #{choices},
@@ -451,7 +451,7 @@ for i in 0..data.length - 8
         });
         ")
     elsif charttype == 'dropdown'
-        choices = data[i].scan(/Choices: "(.*)"/)
+        choices = data[i].scan(/Choices: "(.*)"/)[0][0]
         f.write("var input#{i} = new DropdownInput({
             \"id\": \"input#{i}\",
             \"choices\": #{choices},
@@ -467,7 +467,7 @@ for i in 0..data.length - 8
         });
         ")
     elsif charttype == 'checkboxgroup'
-        choices = data[i].scan(/Choices: "(.*)"/)
+        choices = data[i].scan(/Choices: "(.*)"/)[0][0]
         f.write("var input#{i} = new CheckboxGroupInput({
             \"id\": \"input#{i}\",
             \"choices\": #{choices},
@@ -482,7 +482,7 @@ for i in 0..data.length - 8
         });
         ")
     elsif charttype == 'multiselect'
-        choices = data[i].scan(/Choices: "(.*)"/)
+        choices = data[i].scan(/Choices: "(.*)"/)[0][0]
         f.write("var input#{i} = new MultiSelectInput({
             \"id\": \"input#{i}\",
             \"choices\": #{choices},
@@ -579,8 +579,10 @@ styles in <div> tags, similar to Bootstrap's grid system.
 for i in 0..data.length - 8
     charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
     rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0].to_s
-    if data[i] == 'ColorScheme'
+    if data[i].include? 'ColorScheme'
         panelname = data[i].scan(/PanelName: "(.*)" ColorScheme:/)[0][0]
+    elsif data[i].include? 'Choices'
+        panelname = data[i].scan(/PanelName: "(.*)" Choices:/)[0][0]
     else
         panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
     end
@@ -638,6 +640,7 @@ for i in 0..data.length - 8
                 </div>
             </div>
         </div>
+        <br>
         <br>
         ")
         end
