@@ -9,7 +9,7 @@ end
 def start
 	data = IO.readlines("config.txt")
 	count = 0
-	create = 'n'
+	create = 'y'
 	for i in 0..data.length - 8
     charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
     if (charttype == 'text' or charttype == 'radio' or charttype == 'dropdown' or charttype == 'checkboxgroup' or charttype == 'multiselect' or charttype == 'timerangepicker')

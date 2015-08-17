@@ -260,7 +260,7 @@ require([
         //
         ")
 for i in 0..data.length - 8
-    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
+    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0].downcase
     if data[i].include? 'ColorScheme'
         panelname = data[i].scan(/PanelName: "(.*)" ColorScheme:/)[0][0]
     else
@@ -271,7 +271,7 @@ for i in 0..data.length - 8
     else
         hasTime = false
         for j in 0..data.length - 8
-            ctype = data[j].scan(/ChartType: "(.*)" RowType:/)[0][0]
+            ctype = data[j].scan(/ChartType: "(.*)" RowType:/)[0][0].downcase
             if ctype == 'timerangepicker'
                 pname = data[j].scan(/Search: "(.*)" ChartType:/)[0][0]
                 if pname == panelname
@@ -341,7 +341,7 @@ f.write("
         //
         ")
 for i in 0..data.length - 8
-    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
+    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0].downcase
     if data[i].include? 'ColorScheme'
         colorscheme = data[i].scan(/ColorScheme: "(.*)"/)[0][0]
         colorscheme = colorscheme.gsub('#', '0x')
@@ -417,7 +417,7 @@ f.write("
         ")
 
 for i in 0..data.length - 8
-    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
+    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0].downcase
     inputvalue = data[i].scan(/Search: "(.*)" ChartType:/)[0][0]
     if inputvalue == '$'
         inputvalue = inputvalue.gsub('$', '')
@@ -577,8 +577,8 @@ styles in <div> tags, similar to Bootstrap's grid system.
         ")
 
 for i in 0..data.length - 8
-    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0]
-    rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0].to_s
+    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0].downcase
+    rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0].to_s.downcase
     if data[i].include? 'ColorScheme'
         panelname = data[i].scan(/PanelName: "(.*)" ColorScheme:/)[0][0]
     elsif data[i].include? 'Choices'
@@ -595,14 +595,14 @@ for i in 0..data.length - 8
         charttype = 'chart'
     end
 
-    if rowtype == 'Double'
+    if rowtype == 'double'
         if tablecount == 0
             f.write("<table width=\"100%\">
             <tr>
                 <td width=\"50%\">
                     ")
         end
-    elsif rowtype == 'Triple'
+    elsif rowtype == 'triple'
         if tablecount == 0
             f.write("<table width=\"100%\">
             <tr>
@@ -611,7 +611,7 @@ for i in 0..data.length - 8
         end
     end
     if isForm
-        if (rowtype == 'Triple' or rowtype == 'Double')
+        if (rowtype == 'triple' or rowtype == 'double')
             f.write("<div class=\"input input-#{charttype}\" id=\"input#{i}\">
                         <label>#{panelname}</label>
                     </div>
@@ -623,7 +623,7 @@ for i in 0..data.length - 8
         ")
         end
     elsif !isForm
-        if (rowtype == 'Triple' or rowtype == 'Double')
+        if (rowtype == 'triple' or rowtype == 'double')
             f.write("<div class=\"panel-element-row\">
                         <div id=\"element#{i}\" class=\"dashboard-element #{charttype}\">
                             <div class=\"panel-head\">
@@ -645,7 +645,7 @@ for i in 0..data.length - 8
         ")
         end
     end
-    if rowtype == 'Double'
+    if rowtype == 'double'
         if tablecount == 0
             f.write("</td>
                 <td>
@@ -658,7 +658,7 @@ for i in 0..data.length - 8
         ")
             tablecount = 0
         end
-    elsif rowtype == 'Triple'
+    elsif rowtype == 'triple'
         if tablecount <= 1
             f.write("</td>
                 <td width=\"33%\">
