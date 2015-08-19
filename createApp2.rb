@@ -125,7 +125,7 @@ f.write(".main-area {
 	margin-top: 30px;
 	margin-bottom: 30px;
 	padding: 30px;
-	width: 1100px;
+	width: 1400px;
 	background-color: white;
 }")
 f.close
