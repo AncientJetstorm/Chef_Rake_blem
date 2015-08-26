@@ -1,7 +1,7 @@
 require 'fileutils'
 
 data = IO.readlines('config.txt')
-app_name = data[0].scan(/AppName: "(.*)" Search:/)[0][0]
+app_name = data[0].scan(/AppName: "(\w*)"\s/)[0][0]
 tablecount = 0
 
 FileUtils::mkdir_p app_name + '/appserver'
@@ -260,27 +260,23 @@ require([
         //
         ")
 for i in 0..data.length - 8
-    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0].downcase
-    if data[i].include? 'ColorScheme'
-        panelname = data[i].scan(/PanelName: "(.*)" ColorScheme:/)[0][0]
-    else
-        panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
-    end
+    charttype = data[i].scan(/ChartType: "(\w*)"\s/)[0][0].downcase
+    panelname = data[i].scan(/PanelName: "(\w*)/)[0][0]
     if (charttype == 'text' or charttype == 'radio' or charttype == 'dropdown' or charttype == 'checkboxgroup' or charttype == 'multiselect' or charttype == 'timerangepicker')
 
     else
         hasTime = false
         for j in 0..data.length - 8
-            ctype = data[j].scan(/ChartType: "(.*)" RowType:/)[0][0].downcase
+            ctype = data[j].scan(/ChartType: "(\w*)"\s/)[0][0].downcase
             if ctype == 'timerangepicker'
-                pname = data[j].scan(/Search: "(.*)" ChartType:/)[0][0]
+                pname = data[j].scan(/Search: "(\w*)"\s/)[0][0]
                 if pname == panelname
                     hasTime = true
                     timeselect = j
                 end
             end
         end
-        search = data[i].scan(/Search: "(.*)" ChartType:/)[0][0]
+        search = data[i].scan(/Search: "(\w*)"\s/)[0][0]
         if hasTime
             f.write("var search#{i} = new SearchManager({
             \"id\": \"search#{i}\",
@@ -341,9 +337,9 @@ f.write("
         //
         ")
 for i in 0..data.length - 8
-    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0].downcase
+    charttype = data[i].scan(/ChartType: "(\w*)"\s/)[0][0].downcase
     if data[i].include? 'ColorScheme'
-        colorscheme = data[i].scan(/ColorScheme: "(.*)"/)[0][0]
+        colorscheme = data[i].scan(/ColorScheme: "(\w*)"/)[0][0]
         colorscheme = colorscheme.gsub('#', '0x')
     end
     if (charttype == 'text' or charttype == 'radio' or charttype == 'dropdown' or charttype == 'checkboxgroup' or charttype == 'multiselect' or charttype == 'timerangepicker')
@@ -417,8 +413,8 @@ f.write("
         ")
 
 for i in 0..data.length - 8
-    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0].downcase
-    inputvalue = data[i].scan(/Search: "(.*)" ChartType:/)[0][0]
+    charttype = data[i].scan(/ChartType: "(\w*)"\s/)[0][0].downcase
+    inputvalue = data[i].scan(/Search: "(\w*)"\s/)[0][0]
     if inputvalue == '$'
         inputvalue = inputvalue.gsub('$', '')
     end
@@ -435,7 +431,7 @@ for i in 0..data.length - 8
         });
         ")
     elsif charttype == 'radio'
-        choices = data[i].scan(/Choices: "(.*)"/)[0][0]
+        choices = data[i].scan(/Choices: "(\w*)"/)[0][0]
         f.write("var input#{i} = new RadioGroupInput({
             \"id\": \"input#{i}\",
             \"choices\": #{choices},
@@ -451,7 +447,7 @@ for i in 0..data.length - 8
         });
         ")
     elsif charttype == 'dropdown'
-        choices = data[i].scan(/Choices: "(.*)"/)[0][0]
+        choices = data[i].scan(/Choices: "(\w*)"/)[0][0]
         f.write("var input#{i} = new DropdownInput({
             \"id\": \"input#{i}\",
             \"choices\": #{choices},
@@ -467,7 +463,7 @@ for i in 0..data.length - 8
         });
         ")
     elsif charttype == 'checkboxgroup'
-        choices = data[i].scan(/Choices: "(.*)"/)[0][0]
+        choices = data[i].scan(/Choices: "(\w*)"/)[0][0]
         f.write("var input#{i} = new CheckboxGroupInput({
             \"id\": \"input#{i}\",
             \"choices\": #{choices},
@@ -482,7 +478,7 @@ for i in 0..data.length - 8
         });
         ")
     elsif charttype == 'multiselect'
-        choices = data[i].scan(/Choices: "(.*)"/)[0][0]
+        choices = data[i].scan(/Choices: "(\w*)"/)[0][0]
         f.write("var input#{i} = new MultiSelectInput({
             \"id\": \"input#{i}\",
             \"choices\": #{choices},
@@ -577,15 +573,9 @@ styles in <div> tags, similar to Bootstrap's grid system.
         ")
 
 for i in 0..data.length - 8
-    charttype = data[i].scan(/ChartType: "(.*)" RowType:/)[0][0].downcase
-    rowtype = data[i].scan(/RowType: "(.*)" PanelName:/)[0][0].to_s.downcase
-    if data[i].include? 'ColorScheme'
-        panelname = data[i].scan(/PanelName: "(.*)" ColorScheme:/)[0][0]
-    elsif data[i].include? 'Choices'
-        panelname = data[i].scan(/PanelName: "(.*)" Choices:/)[0][0]
-    else
-        panelname = data[i].scan(/PanelName: "(.*)"/)[0][0]
-    end
+    charttype = data[i].scan(/ChartType: "(\w*)"\s/)[0][0].downcase
+    rowtype = data[i].scan(/RowType: "(\w*)"\s/)[0][0].to_s.downcase
+    panelname = data[i].scan(/PanelName: "(\w*)/)[0][0]
     if (charttype == 'text' or charttype == 'radio' or charttype == 'dropdown' or charttype == 'checkboxgroup' or charttype == 'multiselect' or charttype == 'timerangepicker')
         isForm = true
     elsif (charttype == 'event' or charttype == 'table' or charttype == 'single' or charttype == 'map')

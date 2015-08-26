@@ -29,6 +29,7 @@ def start
 		end
 		if create == 'y'
 			app_name = data[0].scan(/AppName: "(\w*)"\s/)[0][0]
+			status "Creating App..."
 			ruby "createApp2.rb"
 			status "App created"
 			STDOUT.puts "Package App? (y/n)"
@@ -59,12 +60,16 @@ def errorChecks(file)
 	end
 	for i in 0..file.length - 8
 		rowState = file[i].scan(/RowType: "(\w*)"\s/)[0][0].downcase
-		puts rowState
 		search = file[i].scan(/Search: "(\w*)"\s/)[0][0]
 		charttype = file[i].scan(/ChartType: "(\w*)"\s/)[0][0]
 		if file[i].include? 'ColorScheme'
 			panelname = file[i].scan(/PanelName: "(\w*)"\s/)[0][0]
 			colorscheme = file[i].scan(/ColorScheme: "(\w*)"\s/)[0][0]
+		end
+		if file[i].include? 'Choices'
+			panelname = file[i].scan(/PanelName: "(\w*)"\s/)[0][0]
+			choices = file[i].scan(/Choices: "(\w*)"\s/)[0][0]
+		end
 		if colorscheme == ""
 			puts "
 Error! Row #{i + 1} does not have a ColorScheme.
@@ -73,18 +78,12 @@ Package not created."
 			puts ""
 			return true
 		end
-		elsif file[i].include? 'Choices'
-			panelname = file[i].scan(/PanelName: "(\w*)"\s/)[0][0]
-			choices = file[i].scan(/Choices: "(\w*)"\s/)[0][0]
 		if panelname == ""
 			puts "
 Error! Row #{i + 1} does not have Choices.
 Package not created."
 			puts ""
 			return true
-		end
-		else
-			panelname = file[i].scan(/PanelName: "(\w*)"\s/)[0][0]
 		end
 		if rowState == ""
 			puts "
