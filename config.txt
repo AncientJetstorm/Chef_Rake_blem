@@ -1,4 +1,4 @@
-AppName: "" Search: "" ChartType: "" RowType: "" PanelName: "" ColorScheme: ""
+AppName: "appname" Search: "sear" ChartType: "pie" RowType: "Double" PanelName: "nem" ColorScheme: "da"
 
 Chart Example == AppName: "First_App" Search: "| inputlookup musicdata.csv | search eventtype=* | stats count by eventtype | count $field1$" ChartType: "pie" RowType: "Single" PanelName: "Top Devices Used" ColorScheme: "[#345ffb, #ff456b]"
 Form Example == AppName: "First_App" Search: "field1" ChartType: "dropdown" RowType: "Single" PanelName: "dd1" Choices: "[{"value": "1", "label": "1"},{"value": "2", "label": "2"},{"value": "3", "label": "3"}]"
