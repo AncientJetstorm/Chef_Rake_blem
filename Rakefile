@@ -1,4 +1,5 @@
 require 'rake/packagetask'
+require 'yaml'
 
 task :default => :createApp
 
@@ -7,17 +8,18 @@ task :createApp do
 end
 
 def start
-	data = IO.readlines("config.txt")
-	if (!errorChecks(data))
+	yamldata = YAML.load_file('config.yaml')
+	unless (errorChecks(yamldata))
 		count = 0
 		create = 'y'
-		for i in 0..data.length - 8
-	    charttype = data[i].scan(/ChartType: "(\w*)"\s/)[0][0]
-	    if (charttype == 'text' or charttype == 'radio' or charttype == 'dropdown' or charttype == 'checkboxgroup' or charttype == 'multiselect' or charttype == 'timerangepicker')
-	    else
-	    	count += 1
-	    end
-		end
+		yamldata.each_key { |key|
+			unless yamldata[key].include?('Extra')
+		    charttype = yamldata[key]['ChartType']
+		    unless (charttype == 'text' or charttype == 'radio' or charttype == 'dropdown' or charttype == 'checkboxgroup' or charttype == 'multiselect' or charttype == 'timerangepicker')
+		    	count += 1
+		    end
+	  	end
+	  }
 		if count >= 14
 			puts ""
 			puts "WARNING! There would be 14 or more searches happening in this app.
@@ -28,13 +30,24 @@ def start
 			create = STDIN.gets.strip
 		end
 		if create == 'y'
-			app_name = data[0].scan(/AppName: "(\w*)"\s/)[0][0]
-			status "Creating App..."
+			app_name = yamldata['Chart1']['AppName']
+			status "Creating #{app_name}..."
 			ruby "createApp2.rb"
 			status "App created"
 			STDOUT.puts "Package App? (y/n)"
 			input = STDIN.gets.strip
 			if input == 'y'
+				# Rake::PackageTask.new('rake', "1.0") do |p|
+				#   p.need_tar = true
+				#   p.package_files.include 'GenApp/*'
+				#   def p.package_name
+				#     "GenApp"
+				#   end
+
+				#   def p.tgz_file
+				#     "GenApp.spl"
+				#   end
+				# end
 				sh "tar cv " + app_name + "/ > " + app_name + ".tar"
 				sh "gzip " + app_name + ".tar"
 				sh "mv " + app_name + ".tar.gz " + app_name + ".spl"
@@ -52,95 +65,96 @@ end
 def errorChecks(file)
 	rdouble = 0
 	rtriple = 0
-	if file[0].scan(/AppName: "(\w*)"\s/)[0][0] == ""
+	if file['Chart1']['AppName'] == "" or file['Chart1']['AppName'] == nil
 		puts ""
 		puts "Error! No app name defined."
 		puts ""
 		return true
 	end
-	for i in 0..file.length - 8
-		rowState = file[i].scan(/RowType: "(\w*)"\s/)[0][0].downcase
-		search = file[i].scan(/Search: "(\w*)"\s/)[0][0]
-		charttype = file[i].scan(/ChartType: "(\w*)"\s/)[0][0]
-		if file[i].include? 'ColorScheme'
-			panelname = file[i].scan(/PanelName: "(\w*)"\s/)[0][0]
-			colorscheme = file[i].scan(/ColorScheme: "(\w*)"\s/)[0][0]
-		end
-		if file[i].include? 'Choices'
-			panelname = file[i].scan(/PanelName: "(\w*)"\s/)[0][0]
-			choices = file[i].scan(/Choices: "(\w*)"\s/)[0][0]
-		end
-		if colorscheme == ""
-			puts "
-Error! Row #{i + 1} does not have a ColorScheme.
-ColorScheme is not required, but remove it if it is not being used.
-Package not created."
-			puts ""
-			return true
-		end
-		if panelname == ""
-			puts "
-Error! Row #{i + 1} does not have Choices.
-Package not created."
-			puts ""
-			return true
-		end
-		if rowState == ""
-			puts "
-Error! Row #{i + 1} does not have a RowType.
-Package not created."
-			puts ""
-			return true
-		end
-		if search == ""
-			puts "
-Error! Row #{i + 1} does not have a Search.
-Package not created."
-			puts ""
-			return true
-		end
-		if charttype == ""
-puts "
-Error! Row #{i + 1} does not have a ChartType.
-Package not created."
-			puts ""
-			return true
-		end
-		if panelname == ""
-			puts "
-Error! Row #{i + 1} does not have a PanelName.
-Package not created."
-			puts ""
-			return true
-		end
-		if (rowState == "double")
-			if rdouble == 0
-				rdouble += 1
-			else
-				rdouble = 0
+	file.each_key { |key|
+		unless file[key].include?('Extra')
+			rowState = file[key]["RowType"].downcase
+			search = file[key]["Search"]
+			charttype = file[key]["ChartType"]
+			panelname = file[key]["PanelName"]
+			if file[key].include? 'ColorScheme'
+				colorscheme = file[key]["ColorScheme"]
+				if colorscheme == "" or colorscheme == nil
+					puts "
+Error! #{key} does not have a ColorScheme.
+	ColorScheme is not required, but remove it if it is not being used.
+	Package not created."
+					puts ""
+					return true
+				end
 			end
-		elsif (rowState == "triple")
-			if rtriple <= 1
-				rtriple += 1
-			else
-				rtriple = 0
+			if file[key].include?('Choices')
+				choices = file[key]["Choices"]
+				if choices == "" or choices == nil
+					puts "
+Error! #{key} does not have Choices.
+	Package not created."
+					puts ""
+					return true
+				end
 			end
-		else
-			if rdouble == 1
-				puts ""
-				puts "Error! Row #{i} does not have a follow up for the double row type.
-				Package not created."
-				puts ""
-				return true
-			elsif rtriple >= 1
-				puts ""
-				puts "Error! Row #{i} does not have a follow up for the triple row type.
-				Package not created."
+			if rowState == "" or rowState == nil
+				puts "
+Error! #{key} does not have a RowType.
+	Package not created."
 				puts ""
 				return true
 			end
+			if search == "" or search == nil
+				puts "
+Error! #{key} does not have a Search.
+	Package not created."
+				puts ""
+				return true
+			end
+			if charttype == "" or charttype == nil
+	puts "
+Error! #{key} does not have a ChartType.
+	Package not created."
+				puts ""
+				return true
+			end
+			if panelname == "" or panelname == nil
+				puts "
+Error! #{key} does not have a PanelName.
+	Package not created."
+				puts ""
+				return true
+			end
+			if (rowState == "double")
+				if rdouble == 0
+					rdouble += 1
+				else
+					rdouble = 0
+				end
+			elsif (rowState == "triple")
+				if rtriple <= 1
+					rtriple += 1
+				else
+					rtriple = 0
+				end
+			else
+				if rdouble == 1
+					puts ""
+					puts "Error! #{key} does not have a follow up for the double row type.
+					Package not created."
+					puts ""
+					return true
+				elsif rtriple >= 1
+					puts ""
+					puts "Error! #{key} does not have a follow up for the triple row type.
+					Package not created."
+					puts ""
+					return true
+				end
+			end
 		end
-	end
+	}
 	return false
 end
 
