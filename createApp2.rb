@@ -25,13 +25,13 @@ f.close
 
 FileUtils::mkdir_p app_name + '/bin'
 f = File.open(app_name + '/bin/README', 'w')
-f.write("Put search commands, scripted inputs and scripted lookups here...
-")
+f.write('Put search commands, scripted inputs and scripted lookups here...
+')
 f.close
 
 FileUtils::mkdir_p app_name + '/default'
 f = File.open(app_name + '/default/app.conf', 'w')
-f.write("#
+f.write('#
 # Splunk app configuration file
 #
 
@@ -39,17 +39,17 @@ f.write("#
 is_configured = 0
 
 [package]
-id = " + app_name + "
+id = ' + app_name + '
 
 [ui]
 is_visible = True
-label = " + app_name + "
+label = ' + app_name + '
 
 [launcher]
 author = 
 description = 
 version = 1.0
-")
+')
 f.close
 
 FileUtils::mkdir_p app_name + '/default/data'
@@ -70,7 +70,7 @@ f.close
 FileUtils::mkdir_p app_name + '/django'
 FileUtils::mkdir_p app_name + '/django/' + app_name
 f = File.open(app_name + '/django/' + app_name + '/__init__.py', 'w')
-f.write("# Copyright 2015")
+f.write('# Copyright 2015')
 f.close
 
 f = File.open(app_name + '/django/' + app_name + '/tests.py', 'w')
@@ -119,7 +119,7 @@ f.close
 FileUtils::mkdir_p app_name + '/django/' + app_name + '/static'
 FileUtils::mkdir_p app_name + '/django/' + app_name + '/static/' + app_name
 f = File.open(app_name + '/django/' + app_name + '/static/' + app_name + '/custom.css', 'w')
-f.write(".main-area {
+f.write('.main-area {
 	border: solid;
 	border-width: 1px;
 	margin: 0px auto;
@@ -128,13 +128,13 @@ f.write(".main-area {
 	padding: 30px;
 	width: 1400px;
 	background-color: white;
-}")
+}')
 
 data.each_key { |key|
     if data[key].include?('Extra')
         extra = data[key]['Extra'].downcase
         if extra == 'overlay'
-            f.write("
+            f.write('
     #overlay {
         border: none;
         border-radius: 5px 5px;
@@ -146,7 +146,7 @@ data.each_key { |key|
         z-index: 100;
         top: 98%;
         position: fixed;
-    }")
+    }')
             f.close
 
             f = File.open(app_name + '/django/' + app_name + '/static/' + app_name + '/overlay.js', 'w')
@@ -1225,11 +1225,11 @@ data.each_key { |key|
     chartCount += 1
 }
 
-f.write("
+f.write('
         //
         // VIEWS: FORM INPUTS
         //
-        ")
+        ')
 
 chartCount = 0
 data.each_key { |key|
@@ -1520,15 +1520,15 @@ data.each_key { |key|
         end
         if rowtype == 'double'
             if tablecount == 0
-                f.write("</td>
+                f.write('</td>
                 <td>
-                    ")
+                    ')
                 tablecount += 1
             elsif tablecount == 1
-                f.write("</td>
+                f.write('</td>
             </tr>
         </table>
-        ")
+        ')
                 tablecount = 0
             end
         elsif rowtype == 'triple'
@@ -1538,10 +1538,10 @@ data.each_key { |key|
                     ")
                 tablecount += 1
             elsif tablecount == 2
-                f.write("</td>
+                f.write('</td>
             </tr>
         </table>
-    ")
+    ')
                 tablecount = 0
             end
         end
@@ -1564,14 +1564,14 @@ data.each_key { |key|
     end
 }
 
-f.write("
+f.write('
 </body>
-</html>")
+</html>')
 f.close
 
 FileUtils::mkdir_p app_name + '/django/' + app_name + '/templatetags'
 f = File.open(app_name + '/django/' + app_name + '/templatetags/__init__.py', 'w')
-f.write("")
+f.write('')
 f.close
 
 f = File.open(app_name + '/README', 'w')

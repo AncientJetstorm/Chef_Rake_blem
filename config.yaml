@@ -7,7 +7,7 @@
 ## Extras == overlay
 ## App Name is needed on the first Chart only, Color Scheme is not required but accepted on any Chart that does not use a form, Choices is required for certain form types.
 ## Make sure the overhead name of each object follows the scheme in the example (Chart1:, Chart2:, Chart3:) they will throw errors otherwise.
-## 
+## Please use double quotes around your Search, some values throw errors ad cause problems, double quotes helps this
 ## 
 ## 
 #######################
@@ -20,7 +20,7 @@ Chart1:
   PanelName: Chart Example
 Chart2:
   AppName:
-  Search: field1
+  Search: "field1"
   ChartType: dropdown
   RowType: Single
   PanelName: Form Example
