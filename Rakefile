@@ -7,7 +7,13 @@ task :createApp do
 end
 
 def start
-	yamldata = YAML.load_file('config.yaml')
+	begin
+		yamldata = YAML.load_file('config.yaml')
+	rescue
+		puts "
+		Error! No file found. Check to make sure your config.yaml file is in the same directory.
+		"
+	end
 	unless (errorChecks(yamldata))
 		count = 0
 		create = 'y'
@@ -29,7 +35,13 @@ def start
 			create = STDIN.gets.strip
 		end
 		if create == 'y'
-			app_name = yamldata['Chart1']['AppName']
+			begin
+				app_name = yamldata['Chart1']['AppName']
+			rescue
+				puts ''
+				puts 'Make sure your AppName is set.'
+				puts ''
+			end
 			status "Creating #{app_name}..."
 			ruby 'createApp2.rb'
 			status 'App created'
@@ -51,12 +63,16 @@ def errorChecks(file)
 	end
 	file.each_key { |key|
 		unless file[key].include?('Extra')
-			rowState = file[key]['RowType'].downcase
-			search = file[key]['Search']
-			charttype = file[key]['ChartType']
-			panelname = file[key]['PanelName']
+			begin
+				rowState = file[key]['RowType'].downcase
+				search = file[key]['Search']
+				charttype = file[key]['ChartType']
+				panelname = file[key]['PanelName']
+			end
 			if file[key].include?('ColorScheme')
-				colorscheme = file[key]['ColorScheme']
+				begin
+					colorscheme = file[key]['ColorScheme']
+				end
 				if colorscheme == '' or colorscheme == nil
 					puts "
 Error! #{key} does not have a ColorScheme.

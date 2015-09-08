@@ -14,7 +14,7 @@
 ##   AppName: GenApp
 ##   Search: "| inputlookup musicdata.csv | search eventtype=* | stats count by eventtype | head $field1$"
 ##   ChartType: pie
-##   RowType: single
+##   RowType: Single
 ##   PanelName: Chart Example
 ## Chart2:
 ##   AppName:
@@ -33,7 +33,7 @@ Chart1:
   AppName: GenApp
   Search: "| inputlookup musicdata.csv | search eventtype=* | stats count by eventtype | head $field1$"
   ChartType: pie
-  RowType: single
+  RowType: Single
   PanelName: Chart Example
 Chart2:
   AppName:
