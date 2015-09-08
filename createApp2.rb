@@ -1610,11 +1610,11 @@ Rake::PackageTask.new('rake', \"1.0\") do |p|
   p.need_tar = true
   p.package_files.include 'README', '*/', '*/*', '*/*/*', '*/*/*/*', '*/*/*/*/*'
   def p.package_name
-    \"App\"
+    \"#{app_name}\"
   end
 
   def p.tgz_file
-    \"App.spl\"
+    \"#{app_name}.spl\"
   end
 end")
 f.close
