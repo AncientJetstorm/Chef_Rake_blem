@@ -7,7 +7,24 @@
 ## Extras == overlay
 ## App Name is needed on the first Chart only, Color Scheme is not required but accepted on any Chart that does not use a form, Choices is required for certain form types.
 ## Make sure the overhead name of each object follows the scheme in the example (Chart1:, Chart2:, Chart3:) they will throw errors otherwise.
-## Please use double quotes around your Search, some values throw errors ad cause problems, double quotes helps this
+## Please use double quotes around your Search, some values throw errors and cause problems, double quotes helps this
+## Example below on how it is set out
+##
+## Chart1:
+##   AppName: GenApp
+##   Search: "| inputlookup musicdata.csv | search eventtype=* | stats count by eventtype | head $field1$"
+##   ChartType: pie
+##   RowType: single
+##   PanelName: Chart Example
+## Chart2:
+##   AppName:
+##   Search: "field1"
+##   ChartType: dropdown
+##   RowType: Single
+##   PanelName: Form Example
+##   Choices: [{"value": "1", "label": "1"},{"value": "2", "label": "2"},{"value": "3", "label": "3"}]
+## Chart3:
+##   Extra: overlay
 ## 
 ## 
 #######################

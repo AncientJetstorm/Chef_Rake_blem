@@ -1,4 +1,3 @@
-require 'rake/packagetask'
 require 'yaml'
 
 task :default => :createApp
@@ -31,30 +30,9 @@ def start
 		end
 		if create == 'y'
 			app_name = yamldata['Chart1']['AppName']
-			status 'Creating #{app_name}...'
+			status "Creating #{app_name}..."
 			ruby 'createApp2.rb'
 			status 'App created'
-			STDOUT.puts 'Package App? (y/n)'
-			input = STDIN.gets.strip
-			if input == 'y'
-				# Rake::PackageTask.new('rake', "1.0") do |p|
-				#   p.need_tar = true
-				#   p.package_files.include 'GenApp/*'
-				#   def p.package_name
-				#     "GenApp"
-				#   end
-
-				#   def p.tgz_file
-				#     "GenApp.spl"
-				#   end
-				# end
-				sh "tar cv " + app_name + "/ > " + app_name + ".tar"
-				sh "gzip " + app_name + ".tar"
-				sh "mv " + app_name + ".tar.gz " + app_name + ".spl"
-				puts ''
-				status 'Install file through Splunk instance'
-				status 'Then restart the Splunk instance'
-			end
 			puts ''
 		else
 			status 'Build quit'
@@ -80,10 +58,10 @@ def errorChecks(file)
 			if file[key].include?('ColorScheme')
 				colorscheme = file[key]['ColorScheme']
 				if colorscheme == '' or colorscheme == nil
-					puts '
+					puts "
 Error! #{key} does not have a ColorScheme.
 	ColorScheme is not required, but remove it if it is not being used.
-	Package not created.'
+	Package not created."
 					puts ''
 					return true
 				end
@@ -91,38 +69,38 @@ Error! #{key} does not have a ColorScheme.
 			if file[key].include?('Choices')
 				choices = file[key]['Choices']
 				if choices == '' or choices == nil
-					puts '
+					puts "
 Error! #{key} does not have Choices.
-	Package not created.'
+	Package not created."
 					puts ''
 					return true
 				end
 			end
 			if rowState == '' or rowState == nil
-				puts '
+				puts "
 Error! #{key} does not have a RowType.
-	Package not created.'
+	Package not created."
 				puts ''
 				return true
 			end
 			if search == '' or search == nil
-				puts '
+				puts "
 Error! #{key} does not have a Search.
-	Package not created.'
+	Package not created."
 				puts ''
 				return true
 			end
 			if charttype == '' or charttype == nil
-	puts '
+	puts "
 Error! #{key} does not have a ChartType.
-	Package not created.'
+	Package not created."
 				puts ''
 				return true
 			end
 			if panelname == '' or panelname == nil
-				puts '
+				puts "
 Error! #{key} does not have a PanelName.
-	Package not created.'
+	Package not created."
 				puts ''
 				return true
 			end
@@ -141,14 +119,14 @@ Error! #{key} does not have a PanelName.
 			else
 				if rdouble == 1
 					puts ''
-					puts 'Error! #{key} does not have a follow up for the double row type.
-					Package not created.'
+					puts "Error! #{key} does not have a follow up for the double row type.
+					Package not created."
 					puts ''
 					return true
 				elsif rtriple >= 1
 					puts ''
-					puts 'Error! #{key} does not have a follow up for the triple row type.
-					Package not created.'
+					puts "Error! #{key} does not have a follow up for the triple row type.
+					Package not created."
 					puts ''
 					return true
 				end

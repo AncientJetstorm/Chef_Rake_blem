@@ -1599,3 +1599,22 @@ FileUtils::mkdir_p app_name + '/lookups'
 
 FileUtils::mkdir_p app_name + '/static'
 
+f = File.open(app_name + '/Rakefile', 'w')
+f.write("require 'rake/packagetask'
+
+task :default => :package
+
+task :package
+
+Rake::PackageTask.new('rake', \"1.0\") do |p|
+  p.need_tar = true
+  p.package_files.include 'README', '*/', '*/*', '*/*/*', '*/*/*/*', '*/*/*/*/*'
+  def p.package_name
+    \"App\"
+  end
+
+  def p.tgz_file
+    \"App.spl\"
+  end
+end")
+f.close
